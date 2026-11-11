@@ -1,0 +1,2028 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#4A2E1A">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Cpolygon points=%2712 2.5 14.94 8.46 21.52 9.42 16.76 14.06 17.88 20.62 12 17.52 6.12 20.62 7.24 14.06 2.48 9.42 9.06 8.46%27 fill=%27%234A2E1A%27/%3E%3C/svg%3E">
+<title>Lo Que Llevas Puesto</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --surface:#FFFFFF;
+    --surface-sunk:#F4EAE0;
+    --ink:#4A2E1A;
+    --ink-muted:#8C7361;
+    --accent:#4A2E1A;
+    --accent-deep:#4A2E1A;
+    --accent-soft:#F4EAE0;
+    --border:#E6D6C4;
+    --btn-bg:#4A2E1A;
+    --btn-bg-hover:#5F3D24;
+    --btn-text:#FFFFFF;
+    --pop:#B5481F;
+    --danger-bg:#FBEAE3;
+    --danger-ink:#8A3B1E;
+    --shadow: 0 12px 30px -16px rgba(74,46,26,0.18);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; color:var(--ink); background:var(--bg);
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Poppins',system-ui,sans-serif; text-wrap:balance; margin:0;}
+  p{margin:0;}
+  button{font-family:inherit;}
+  [hidden]{display:none !important;}
+  .wrap{max-width:900px; margin:0 auto; padding-inline:20px;}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar-inner{
+    max-width:900px; margin:0 auto; padding:12px 20px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .wordmark-sm{font-family:'Poppins'; font-weight:700; font-size:0.98rem; color:var(--ink); cursor:pointer; line-height:1.2; white-space:nowrap;}
+  .wordmark-row{display:flex; align-items:center; gap:7px;}
+  .wordmark-icon{width:17px; height:17px; color:var(--ink); flex-shrink:0;}
+  .icon-btn{
+    width:34px; height:34px; border-radius:50%; border:1.5px solid var(--border);
+    background:var(--surface); color:var(--ink-muted); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.95rem;
+  }
+
+  /* ---------- feed ---------- */
+  .view{padding-block:30px 130px;}
+  .feed-head{padding-block:10px 26px;}
+  .brand-mark{width:40px; height:40px; color:var(--ink); margin-bottom:14px; display:block;}
+  .brand-mark svg{width:100%; height:100%; display:block;}
+  .eyebrow{display:block; font-weight:700; font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-muted); margin-bottom:10px;}
+  .feed-title{font-weight:800; font-size:clamp(1.85rem,6.5vw,2.75rem); line-height:1.08; letter-spacing:-0.01em; max-width:15ch;}
+  .feed-title .tone-strong{color:var(--ink);}
+  .feed-title .tone-soft{color:var(--ink-muted);}
+  .stat-line{margin-top:16px; font-size:0.9rem; color:var(--ink-muted); font-weight:600;}
+  .stat-line b{color:var(--ink); font-variant-numeric:tabular-nums;}
+
+  /* ---------- video capsules (creator exposition) ---------- */
+  .video-section{margin-bottom:8px;}
+  .video-section-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;}
+  .video-section-title{font-weight:700; font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-muted);}
+  .video-add-btn{
+    display:flex; align-items:center; gap:6px; border:1.5px dashed var(--border); background:none;
+    color:var(--ink-muted); font-weight:700; font-size:0.78rem; padding:6px 12px; border-radius:999px; cursor:pointer; flex-shrink:0;
+  }
+  .video-add-btn:hover{border-color:var(--ink); color:var(--ink);}
+  .video-empty{font-size:0.85rem; color:var(--ink-muted); font-weight:500; padding:10px 2px 4px;}
+
+  /* ---------- stories bar (Instagram-style) ---------- */
+  .stories-bar{display:flex; gap:16px; overflow-x:auto; padding:4px 2px 8px; margin:0 -2px 28px; scrollbar-width:none;}
+  .stories-bar::-webkit-scrollbar{display:none;}
+  .story-circle-item{
+    flex:0 0 auto; width:72px; display:flex; flex-direction:column; align-items:center; gap:6px;
+    background:none; border:none; cursor:pointer; padding:0;
+    opacity:0; transform:translateY(8px); animation:cardIn .4s ease forwards;
+    animation-delay:calc(var(--i, 0) * 50ms);
+  }
+  .story-ring{
+    width:66px; height:66px; border-radius:50%; padding:2.5px; flex-shrink:0;
+    background:conic-gradient(from 180deg, var(--pop), var(--ink) 55%, var(--pop));
+  }
+  .story-ring-inner{
+    width:100%; height:100%; border-radius:50%; overflow:hidden; display:flex; align-items:center; justify-content:center;
+    border:2.5px solid var(--bg); background:var(--surface-sunk); position:relative;
+  }
+  .story-ring-inner video{width:100%; height:100%; object-fit:cover; display:block; pointer-events:none;}
+  .story-ring-inner .ring-play{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff;}
+  .story-ring-inner .ring-play svg{filter:drop-shadow(0 1px 4px rgba(0,0,0,0.4));}
+  .story-circle-label{font-size:0.68rem; font-weight:600; color:var(--ink); max-width:70px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+
+  /* ---------- full-screen story viewer ---------- */
+  .story-viewer{
+    position:fixed; inset:0; background:#000; z-index:60;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    opacity:0; animation:viewerFadeIn .22s ease forwards;
+  }
+  .story-viewer-progress{position:absolute; top:12px; left:12px; right:12px; display:flex; gap:5px; z-index:2;}
+  .story-viewer-progress .segment{flex:1; height:3px; border-radius:3px; background:rgba(255,255,255,0.3); overflow:hidden;}
+  .story-viewer-progress .segment.active i{display:block; height:100%; width:100%; background:#fff;}
+  .story-viewer-progress .segment.done i{display:block; height:100%; width:100%; background:#fff;}
+  .story-viewer-close{
+    position:absolute; top:26px; right:14px; z-index:2; width:34px; height:34px; border-radius:50%;
+    border:none; background:rgba(255,255,255,0.15); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.1rem;
+  }
+  .story-viewer-media{width:100%; max-width:480px; flex:1; display:flex; align-items:center; justify-content:center; padding:52px 14px 0;}
+  .story-viewer-media video{width:100%; max-height:72vh; border-radius:10px; background:#000; display:block;}
+  .story-viewer-placeholder{
+    color:#fff; text-align:center; padding:40px 24px; display:flex; flex-direction:column; align-items:center; gap:14px;
+  }
+  .story-viewer-caption{width:100%; max-width:480px; padding:16px 20px 10px; color:#fff;}
+  .story-viewer-title{font-weight:700; font-size:1rem; margin-bottom:4px;}
+  .story-viewer-text{font-size:0.9rem; line-height:1.5; color:rgba(255,255,255,0.8); white-space:pre-wrap;}
+  .story-viewer-actions{display:flex; align-items:center; gap:4px; margin-top:8px;}
+  .story-viewer-actions .pill-btn:hover{background:rgba(255,255,255,0.12);}
+  .story-viewer-actions .pill-btn.active{color:var(--pop) !important;}
+  .story-viewer-nav{
+    position:absolute; top:0; bottom:0; width:30%; background:none; border:none; cursor:pointer; z-index:1;
+  }
+  .story-viewer-nav.prev{left:0;}
+  .story-viewer-nav.next{right:0;}
+  .story-viewer-arrow{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:2; width:38px; height:38px; border-radius:50%;
+    border:none; background:rgba(255,255,255,0.15); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .story-viewer-arrow.prev{left:10px;}
+  .story-viewer-arrow.next{right:10px;}
+  .story-viewer-arrow:disabled{opacity:0.25; cursor:default;}
+  .video-form-preview video{width:100%; max-height:220px; border-radius:10px; background:#000; display:block; margin-top:8px;}
+  .video-detail-note{font-size:0.82rem; color:rgba(255,255,255,0.7); max-width:34ch;}
+  .video-external-link{color:#fff; font-weight:700; display:inline-flex; align-items:center; gap:6px;}
+
+  .gallery-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:6px; padding-top:4px;}
+  @media (max-width:820px){ .gallery-grid{grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:420px){ .gallery-grid{gap:4px;} }
+
+  .story-card{
+    position:relative; background:var(--surface); border:1px solid var(--border);
+    border-radius:6px; overflow:hidden; display:flex; flex-direction:column;
+    transition:transform .12s ease, border-color .18s ease;
+    opacity:0; transform:translateY(10px); animation:cardIn .42s ease forwards;
+    animation-delay:calc(var(--i, 0) * 35ms);
+  }
+  .story-card:active{transform:scale(0.97);}
+  .story-card:hover{border-color:var(--ink); z-index:2;}
+  .index-badge{
+    position:absolute; top:8px; left:8px; z-index:2;
+    background:rgba(11,11,12,0.65); color:#fff; font-weight:700; font-size:0.64rem;
+    width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-variant-numeric:tabular-nums; backdrop-filter:blur(3px);
+  }
+  @keyframes cardIn{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+  @keyframes viewerFadeIn{ from{opacity:0;} to{opacity:1;} }
+
+  /* double-tap to like */
+  .dbltap-zone{position:relative;}
+  .dbltap-heart{
+    position:absolute; inset:0; z-index:3; display:flex; align-items:center; justify-content:center;
+    pointer-events:none; opacity:0;
+  }
+  .dbltap-heart svg{filter:drop-shadow(0 4px 14px rgba(0,0,0,0.35));}
+  .dbltap-heart.show{animation:dblHeartPop .7s ease;}
+  @keyframes dblHeartPop{
+    0%{opacity:0; transform:scale(0.3);}
+    15%{opacity:1; transform:scale(1.15);}
+    30%{transform:scale(0.92);}
+    45%{transform:scale(1.05);}
+    75%{opacity:1; transform:scale(1);}
+    100%{opacity:0; transform:scale(1);}
+  }
+
+  /* ---------- entry card into the anonymous stories slide deck ---------- */
+  .anon-entry{
+    width:100%; display:flex; align-items:center; gap:14px; background:var(--surface); border:1px solid var(--border);
+    border-radius:14px; padding:12px 14px; cursor:pointer; text-align:left; box-shadow:var(--shadow);
+    transition:border-color .16s ease;
+  }
+  .anon-entry:hover{border-color:var(--ink);}
+  .anon-entry-media{
+    width:52px; height:52px; border-radius:12px; overflow:hidden; flex-shrink:0; background:var(--surface-sunk);
+    display:flex; align-items:center; justify-content:center; color:var(--ink-muted);
+  }
+  .anon-entry-media img{width:100%; height:100%; object-fit:cover; display:block;}
+  .anon-entry-body{flex:1; min-width:0; display:flex; flex-direction:column; gap:2px;}
+  .anon-entry-title{font-weight:700; font-size:0.95rem; color:var(--ink); font-family:'Poppins';}
+  .anon-entry-sub{font-size:0.8rem; color:var(--ink-muted); font-weight:500;}
+  .anon-entry-chevron{color:var(--ink-muted); flex-shrink:0;}
+
+  /* ---------- full-screen anonymous stories slide deck ---------- */
+  .anon-stories-overlay{position:fixed; inset:0; z-index:60; background:#0b0b0c;}
+  .anon-stories-close{
+    position:absolute; top:16px; right:14px; z-index:5; width:34px; height:34px; border-radius:50%;
+    border:none; background:rgba(255,255,255,0.15); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.1rem;
+  }
+  .tiktok-slides{
+    position:relative; height:100%; overflow-y:auto;
+    scroll-snap-type:y mandatory; background:#0b0b0c;
+    -webkit-overflow-scrolling:touch;
+  }
+  .tiktok-slides::-webkit-scrollbar{display:none;}
+  .tiktok-slide-empty{
+    height:100%; display:flex; align-items:center; justify-content:center; text-align:center;
+    color:rgba(255,255,255,0.6); font-weight:500; font-size:0.9rem; padding:30px;
+  }
+  .tiktok-slide{
+    position:relative; height:100%; width:100%; scroll-snap-align:start; scroll-snap-stop:always;
+    display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden;
+    background:#141416;
+  }
+  .tiktok-slide-media{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
+  .tiktok-slide-media-placeholder{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    color:rgba(255,255,255,0.3); background:repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0 16px, transparent 16px 32px), #141416;
+  }
+  .tiktok-slide-gradient{
+    position:absolute; left:0; right:0; bottom:0; height:62%; pointer-events:none;
+    background:linear-gradient(to top, rgba(0,0,0,0.82), rgba(0,0,0,0.35) 55%, transparent);
+  }
+  .tiktok-slide-body{
+    position:relative; z-index:2; padding:18px 78px 24px 20px; color:#fff;
+  }
+  .tiktok-slide-example{
+    display:inline-block; font-size:0.62rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase;
+    color:#fff; background:rgba(255,255,255,0.18); padding:3px 9px; border-radius:6px; margin-bottom:8px; backdrop-filter:blur(3px);
+  }
+  .tiktok-slide-name{font-weight:700; font-size:0.95rem; margin-bottom:4px;}
+  .tiktok-slide-name span{font-weight:500; color:rgba(255,255,255,0.65); font-size:0.78rem; margin-left:4px;}
+  .tiktok-slide-text{
+    font-size:0.88rem; line-height:1.48; color:rgba(255,255,255,0.92); font-weight:500;
+    display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; white-space:pre-wrap;
+  }
+  .tiktok-slide-rail{
+    position:absolute; right:10px; bottom:24px; z-index:2;
+    display:flex; flex-direction:column; align-items:center; gap:16px;
+  }
+  .tiktok-rail-btn{
+    background:none; border:none; cursor:pointer; color:#fff; display:flex; flex-direction:column;
+    align-items:center; gap:3px; font-size:0.68rem; font-weight:700; padding:0;
+  }
+  .tiktok-rail-btn svg{filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4));}
+  .tiktok-rail-btn.active{color:var(--pop);}
+  @keyframes railPop{ 0%{transform:scale(1);} 35%{transform:scale(1.4);} 60%{transform:scale(0.9);} 100%{transform:scale(1);} }
+  .tiktok-rail-btn.pop svg{animation:railPop .38s ease;}
+
+  .featured-story{
+    display:flex; background:var(--surface); border:1px solid var(--border);
+    border-radius:18px; overflow:hidden; box-shadow:var(--shadow); margin-bottom:30px; cursor:pointer;
+    transition:border-color .16s ease;
+  }
+  .featured-story:hover{border-color:var(--ink);}
+  .featured-photo-zone{width:40%; flex-shrink:0; min-height:210px; cursor:pointer;}
+  .featured-photo, .featured-photo-placeholder{width:100%; height:100%; object-fit:cover; display:block;}
+  .featured-photo-placeholder{
+    background:repeating-linear-gradient(135deg, var(--accent-soft) 0 14px, transparent 14px 28px), var(--surface-sunk);
+    display:flex; align-items:center; justify-content:center; color:var(--ink-muted);
+  }
+  .featured-body{flex:1; padding:24px 24px 22px; display:flex; flex-direction:column; gap:12px; min-width:0; cursor:pointer;}
+  .featured-tag{
+    align-self:flex-start; font-size:0.68rem; font-weight:700; letter-spacing:0.09em; text-transform:uppercase;
+    color:var(--ink); background:var(--surface-sunk); padding:4px 10px; border-radius:999px;
+  }
+  .featured-text{
+    font-size:1.08rem; line-height:1.55; font-weight:500; color:var(--ink);
+    display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  @media (max-width:640px){
+    .featured-story{flex-direction:column;}
+    .featured-photo-zone{width:100%; aspect-ratio:16/9; min-height:0;}
+  }
+  .story-clickable{cursor:pointer; text-align:left; background:none; border:none; padding:0; display:block; width:100%;}
+  .story-photo{width:100%; aspect-ratio:4/5; object-fit:cover; display:block; background:var(--surface-sunk); border-radius:8px;}
+  .story-photo-placeholder{
+    width:100%; aspect-ratio:4/5; border-radius:8px;
+    background:repeating-linear-gradient(135deg, var(--accent-soft) 0 14px, transparent 14px 28px), var(--surface-sunk);
+    display:flex; align-items:center; justify-content:center; color:var(--ink-muted);
+  }
+  .story-body{padding:12px 6px 4px; display:flex; flex-direction:column; gap:8px;}
+  .story-text{
+    font-size:0.92rem; line-height:1.48; color:var(--ink); font-weight:500;
+    display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .story-meta{display:flex; align-items:center; justify-content:space-between; font-size:0.74rem; color:var(--ink-muted); font-weight:600;}
+  .story-name{color:var(--accent-deep);}
+  .example-tag{
+    align-self:flex-start; font-size:0.64rem; font-weight:700; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--ink); background:var(--surface-sunk);
+    padding:3px 8px; border-radius:6px;
+  }
+  .story-actions{display:flex; align-items:center; gap:4px; padding:6px 0 10px;}
+  .pill-btn{
+    display:flex; align-items:center; gap:6px; border:none; background:none; cursor:pointer;
+    color:var(--ink-muted); font-weight:700; font-size:0.8rem; padding:6px 8px; border-radius:999px;
+  }
+  .pill-btn:hover{background:var(--surface-sunk);}
+  .pill-btn.active{color:var(--pop);}
+  .pill-btn svg{flex-shrink:0;}
+  @keyframes heartPop{ 0%{transform:scale(1);} 35%{transform:scale(1.4);} 60%{transform:scale(0.9);} 100%{transform:scale(1);} }
+  .pill-btn.pop svg{animation:heartPop .38s ease;}
+
+  .empty-state{text-align:center; padding:50px 20px; color:var(--ink-muted); font-weight:500; border:1px dashed var(--border); border-radius:16px;}
+
+  /* ---------- garments (object-only, no person attribution) ---------- */
+  .garment-title{font-size:0.88rem; font-weight:700; color:var(--ink); margin-top:1px;}
+  .garment-story-text{
+    font-size:0.86rem; line-height:1.45; color:var(--ink-muted); font-weight:500;
+    display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .garment-actions{display:flex; align-items:center; padding-top:4px;}
+  .garment-detail-photo{width:100%; max-height:320px; object-fit:cover; display:block;}
+  .garment-detail-body{padding:16px 20px 20px;}
+  .garment-detail-title{font-size:1.05rem; font-weight:700; color:var(--ink); margin-bottom:8px;}
+  .garment-detail-text{font-size:0.96rem; line-height:1.6; font-weight:500; color:var(--ink); white-space:pre-wrap;}
+
+  /* ---------- floating compose button ---------- */
+  .fab-compose{
+    position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
+    width:64px; height:64px; border-radius:50%; background:var(--btn-bg); color:var(--btn-text);
+    border:4px solid var(--bg); box-shadow:0 14px 30px -10px rgba(74,46,26,0.45);
+    display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:30;
+  }
+  .fab-compose:hover{background:var(--btn-bg-hover);}
+  .fab-compose:active{transform:translateX(-50%) scale(0.94);}
+
+  /* ---------- overlays (share / info / detail) ---------- */
+  .overlay-backdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:50;
+    display:flex; align-items:flex-end; justify-content:center;
+  }
+  @media (min-width:640px){ .overlay-backdrop{align-items:center; padding:24px;} }
+  .overlay-panel{
+    background:var(--surface); width:100%; max-width:560px; max-height:92vh; overflow-y:auto;
+    border-radius:20px 20px 0 0; box-shadow:var(--shadow);
+  }
+  @media (min-width:640px){ .overlay-panel{border-radius:20px;} }
+  .overlay-head{
+    position:sticky; top:0; background:var(--surface); display:flex; align-items:center; justify-content:space-between;
+    padding:18px 20px 12px; border-bottom:1px solid var(--border);
+  }
+  .overlay-head h2{font-size:1.1rem; color:var(--ink);}
+  .overlay-close{
+    width:32px; height:32px; border-radius:50%; border:none; background:var(--surface-sunk); color:var(--ink);
+    cursor:pointer; font-size:1.05rem; flex-shrink:0;
+  }
+  .overlay-body{padding:20px;}
+
+  /* share form */
+  .share-form{display:flex; flex-direction:column; gap:22px;}
+  .field{display:flex; flex-direction:column; gap:8px;}
+  .field label{font-size:0.85rem; font-weight:700; color:var(--ink);}
+  .field .hint{font-size:0.8rem; color:var(--ink-muted); font-weight:500;}
+  textarea, input[type="text"], input[type="email"], input[type="tel"]{
+    font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; font-weight:500; color:var(--ink);
+    background:var(--bg); border:1.5px solid var(--border); border-radius:10px; padding:12px 14px; width:100%;
+  }
+
+  /* contacto */
+  .contact-card{background:var(--surface-sunk); border:1.5px solid var(--border); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:14px;}
+  .contact-card[hidden]{display:none;}
+  .contact-title{display:flex; align-items:center; gap:8px; font-size:0.72rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-muted);}
+  .contact-title svg{width:15px; height:15px;}
+  .contact-item{display:flex; flex-direction:column; gap:6px;}
+  .contact-item label{font-size:0.85rem; font-weight:700; color:var(--ink); display:flex; align-items:center; gap:6px;}
+  .contact-item label .opt{font-weight:500; color:var(--ink-muted); font-size:0.78rem;}
+  .input-icon{position:relative;}
+  .input-icon svg{position:absolute; left:13px; top:50%; transform:translateY(-50%); width:18px; height:18px; color:var(--ink-muted); pointer-events:none;}
+  .input-icon input{padding-left:42px;}
+  .contact-card .hint{font-size:0.78rem; color:var(--ink-muted); font-weight:500; line-height:1.4;}
+  textarea{min-height:120px; resize:vertical; line-height:1.5;}
+  textarea:focus, input:focus{outline:none; border-color:var(--ink);}
+
+  .photo-drop{
+    border:1.5px dashed var(--border); border-radius:14px; padding:18px; display:flex; align-items:center; gap:14px;
+    cursor:pointer; background:var(--bg);
+  }
+  .photo-drop:hover{border-color:var(--ink);}
+  .photo-drop-icon{width:40px; height:40px; border-radius:10px; flex-shrink:0; background:var(--accent-soft); color:var(--accent-deep); display:flex; align-items:center; justify-content:center;}
+  .photo-drop span{font-weight:600; font-size:0.9rem;}
+  .photo-drop small{display:block; color:var(--ink-muted); font-weight:500; font-size:0.78rem; margin-top:2px;}
+  .photo-preview{position:relative; width:100%; max-width:240px; border-radius:12px; overflow:hidden; border:1px solid var(--border);}
+  .photo-preview img{width:100%; display:block;}
+  .photo-remove{position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.6); color:#fff; border:none; border-radius:50%; width:26px; height:26px; cursor:pointer; font-size:0.9rem;}
+
+  .toggle-row{display:flex; gap:10px; flex-wrap:wrap;}
+  .toggle-btn{border:1.5px solid var(--border); background:var(--bg); color:var(--ink-muted); padding:9px 16px; border-radius:999px; font-weight:600; font-size:0.88rem; cursor:pointer;}
+  .toggle-btn[aria-pressed="true"]{background:var(--btn-bg); border-color:var(--btn-bg); color:var(--btn-text);}
+
+  .checkbox-row{display:flex; gap:12px; align-items:flex-start; background:var(--surface-sunk); border-radius:12px; padding:14px 16px;}
+  .checkbox-row input{margin-top:4px; width:18px; height:18px; accent-color:var(--accent-deep); flex-shrink:0;}
+  .checkbox-row label{font-weight:600; font-size:0.9rem; line-height:1.4;}
+  .checkbox-row p{font-size:0.8rem; color:var(--ink-muted); font-weight:500; margin-top:4px;}
+
+  .submit-btn{
+    background:var(--btn-bg); color:var(--btn-text); border:none; border-radius:12px; padding:14px 22px;
+    font-weight:700; font-size:0.98rem; cursor:pointer; font-family:'Poppins'; letter-spacing:0.01em;
+  }
+  .submit-btn:hover{background:var(--btn-bg-hover);}
+  .submit-btn:disabled{opacity:0.55; cursor:default;}
+
+  .form-msg{font-size:0.86rem; font-weight:600; padding:9px 13px; border-radius:10px;}
+  .form-msg.error{background:var(--danger-bg); color:var(--danger-ink);}
+  .form-msg.ok{background:var(--accent-soft); color:var(--accent-deep);}
+
+  .success-panel{text-align:center; padding:36px 12px 12px; display:flex; flex-direction:column; gap:12px; align-items:center;}
+  .success-panel h3{font-size:1.25rem;}
+  .success-panel p{color:var(--ink-muted); font-weight:500; max-width:40ch;}
+
+  /* info modal content */
+  .info-copy{color:var(--ink-muted); font-weight:500; line-height:1.6; font-size:0.96rem;}
+  .info-copy strong{color:var(--ink);}
+  .how-title{font-size:0.76rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-muted); margin:24px 0 14px;}
+  .how-steps{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .how-step{display:flex; gap:10px; align-items:flex-start;}
+  .how-num{font-family:'Poppins'; font-weight:700; font-size:0.95rem; color:var(--btn-text); background:var(--btn-bg); width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .how-step p{font-size:0.84rem; color:var(--ink-muted); font-weight:500; line-height:1.4;}
+
+  /* detail modal */
+  .modal-photo{width:100%; max-height:320px; object-fit:cover; display:block;}
+  .modal-text{font-size:1rem; line-height:1.6; font-weight:500; margin-top:4px; white-space:pre-wrap; color:var(--ink);}
+  .modal-meta{margin-top:14px; font-size:0.83rem; color:var(--ink-muted); font-weight:600;}
+  .modal-actions{display:flex; gap:6px; margin-top:14px; padding-top:14px; border-top:1px solid var(--border);}
+  .comments-block{margin-top:20px;}
+  .comments-title{font-size:0.78rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-muted); margin-bottom:12px;}
+  .comment-item{padding:10px 0; border-bottom:1px solid var(--border);}
+  .comment-item:last-child{border-bottom:none;}
+  .comment-name{font-weight:700; font-size:0.85rem; color:var(--accent-deep);}
+  .comment-text{font-size:0.9rem; font-weight:500; color:var(--ink); margin-top:2px; line-height:1.45;}
+  .comment-empty{font-size:0.86rem; color:var(--ink-muted); font-weight:500; padding:6px 0 14px;}
+  .comment-form{display:flex; flex-direction:column; gap:10px; margin-top:14px;}
+  .comment-form-row{display:flex; gap:8px;}
+  .comment-form-row input[type="text"].comment-name-input{max-width:130px; flex-shrink:0;}
+  .comment-submit{background:var(--btn-bg); color:var(--btn-text); border:none; border-radius:10px; padding:0 16px; font-weight:700; font-family:'Poppins'; cursor:pointer; font-size:0.88rem;}
+  .comment-submit:hover{background:var(--btn-bg-hover);}
+
+  /* =====================================================================
+     PESTAÑAS (Archivo · Historias · Mi cápsula)
+  ====================================================================== */
+  .tabs{
+    max-width:900px; margin:0 auto; padding:0 20px 10px;
+    display:flex; gap:6px; overflow-x:auto; scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{
+    flex:0 0 auto; border:1.5px solid var(--border); background:var(--surface); color:var(--ink-muted);
+    font-family:'Poppins',sans-serif; font-weight:600; font-size:0.86rem; padding:8px 16px; border-radius:999px;
+    cursor:pointer; transition:background .18s ease, color .18s ease, border-color .18s ease;
+    text-decoration:none; white-space:nowrap;
+  }
+  .tab-btn:hover{border-color:var(--ink); color:var(--ink);}
+  .tab-btn[aria-selected="true"]{background:var(--btn-bg); border-color:var(--btn-bg); color:var(--btn-text);}
+  .tab-panel{animation:viewerFadeIn .3s ease;}
+
+  /* ---------- Historias: cápsulas audiovisuales de YouTube ---------- */
+  .caps-head{padding-block:10px 26px;}
+  .caps-title{font-weight:800; font-size:clamp(1.7rem,6vw,2.5rem); line-height:1.1; letter-spacing:-0.01em; max-width:18ch;}
+  .caps-intro{margin-top:14px; color:var(--ink-muted); font-weight:500; line-height:1.6; max-width:52ch;}
+  .caps-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:22px;}
+  @media (max-width:640px){ .caps-grid{grid-template-columns:1fr; gap:26px;} }
+  .caps-grid .capsule:first-child{grid-column:1/-1;}
+  .capsule{
+    display:flex; flex-direction:column; gap:12px;
+    opacity:0; transform:translateY(10px); animation:cardIn .45s ease forwards;
+    animation-delay:calc(var(--i, 0) * 70ms);
+  }
+  .capsule-frame{
+    position:relative; width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden;
+    background:#1a120c; box-shadow:0 18px 40px -22px rgba(74,46,26,0.55);
+  }
+  .capsule-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0; display:block;}
+  .capsule-poster{
+    position:absolute; inset:0; width:100%; height:100%; padding:0; border:0; cursor:pointer; background:#1a120c;
+    display:block;
+  }
+  .capsule-poster img{width:100%; height:100%; object-fit:cover; display:block; filter:saturate(0.85) contrast(1.05); transition:transform .5s ease, filter .3s ease;}
+  .capsule-poster:hover img{transform:scale(1.03); filter:saturate(1) contrast(1.05);}
+  .capsule-poster::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 45%, rgba(26,18,12,0.55) 100%),
+               linear-gradient(to top, rgba(26,18,12,0.6), transparent 45%);
+  }
+  .capsule-play{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:2;
+    width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,0.92); color:var(--ink);
+    display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px -8px rgba(0,0,0,0.5);
+    transition:transform .2s ease, background .2s ease;
+  }
+  .capsule-poster:hover .capsule-play{transform:translate(-50%,-50%) scale(1.08); background:#fff;}
+  .capsule-num{
+    position:absolute; left:14px; bottom:12px; z-index:2; color:#fff;
+    font-family:'Poppins'; font-weight:700; font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase;
+    text-shadow:0 1px 6px rgba(0,0,0,0.5);
+  }
+  .capsule-info{padding:0 2px; display:flex; flex-direction:column; gap:5px;}
+  .capsule-title{font-family:'Poppins'; font-weight:700; font-size:1.08rem; color:var(--ink); line-height:1.3;}
+  .capsule-text{font-size:0.92rem; line-height:1.55; color:var(--ink-muted); font-weight:500;}
+  .capsule-yt{
+    align-self:flex-start; margin-top:2px; display:inline-flex; align-items:center; gap:5px;
+    font-size:0.82rem; font-weight:700; color:var(--ink-muted); text-decoration:none;
+  }
+  .capsule-yt:hover{color:var(--ink); text-decoration:underline; text-underline-offset:3px;}
+  .caps-empty{
+    text-align:center; padding:56px 22px; border:1px dashed var(--border); border-radius:18px;
+    color:var(--ink-muted); font-weight:500; line-height:1.6;
+  }
+  .caps-empty svg{color:var(--ink); opacity:0.8; margin-bottom:12px;}
+  .caps-cta{
+    margin-top:40px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    background:var(--surface-sunk); border-radius:16px; padding:20px 22px;
+  }
+  .caps-cta p{font-weight:600; color:var(--ink); font-size:0.98rem;}
+  .link-btn{
+    border:none; background:none; color:var(--ink); font-weight:700; font-size:0.92rem; cursor:pointer;
+    text-decoration:underline; text-underline-offset:4px; padding:4px 0; font-family:'Poppins';
+  }
+
+  /* ---------- Mi cápsula ---------- */
+  .mc-hero{
+    position:relative; overflow:hidden; border-radius:22px; color:#F8EFE6;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(181,72,31,0.35), transparent 55%),
+      radial-gradient(ellipse at 100% 100%, rgba(244,234,224,0.12), transparent 50%),
+      #3A2314;
+    padding:56px 30px 46px; box-shadow:0 30px 60px -30px rgba(74,46,26,0.6);
+  }
+  .mc-hero::before{ /* grano de película */
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:0.22; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .mc-film{
+    position:absolute; left:0; right:0; height:14px; pointer-events:none; opacity:0.35;
+    background:repeating-linear-gradient(90deg, transparent 0 10px, #F8EFE6 10px 20px, transparent 20px 30px);
+    -webkit-mask:linear-gradient(#000,#000); mask:linear-gradient(#000,#000);
+  }
+  .mc-film.top{top:12px;} .mc-film.bottom{bottom:12px;}
+  .mc-film::before{content:""; position:absolute; inset:4px 0; background:#3A2314;}
+  .mc-inner{position:relative; max-width:560px; margin:0 auto; text-align:center; display:flex; flex-direction:column; align-items:center;}
+  .mc-star{width:34px; height:34px; color:#E9C9A8; margin-bottom:18px;}
+  .mc-eyebrow{font-weight:700; font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:#D9B999; margin-bottom:14px;}
+  .mc-title{font-weight:800; font-size:clamp(1.9rem,7vw,2.9rem); line-height:1.08; letter-spacing:-0.01em; color:#FFF8F1; max-width:14ch;}
+  .mc-lead{margin-top:22px; font-size:1.06rem; line-height:1.65; color:rgba(248,239,230,0.88); font-weight:500; max-width:46ch;}
+  .mc-btn{
+    margin-top:30px; display:inline-flex; align-items:center; gap:10px; text-decoration:none;
+    background:#FFF8F1; color:#3A2314; font-family:'Poppins'; font-weight:700; font-size:1.02rem;
+    padding:16px 28px; border-radius:999px; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);
+    transition:transform .18s ease, background .18s ease;
+  }
+  .mc-btn:hover{transform:translateY(-2px); background:#fff;}
+  .mc-btn:active{transform:scale(0.97);}
+  .mc-btns{margin-top:30px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center; width:100%;}
+  .mc-btns .mc-btn{margin-top:0; justify-content:center;}
+  .mc-btn-wa{background:transparent; color:#FFF8F1; border:1.5px solid rgba(248,239,230,0.55); box-shadow:none;}
+  .mc-btn-wa:hover{background:rgba(248,239,230,0.1); border-color:#FFF8F1;}
+  @media (max-width:520px){ .mc-btns .mc-btn{width:100%;} }
+  .capsule-link-row{
+    width:100%; display:flex; align-items:center; gap:14px; text-align:left; cursor:pointer;
+    background:var(--surface-sunk); border:1.5px solid transparent; border-radius:14px; padding:14px 16px;
+    font-family:inherit; color:var(--ink); transition:border-color .16s ease;
+  }
+  .capsule-link-row:hover{border-color:var(--ink);}
+  .capsule-link-icon{width:40px; height:40px; border-radius:10px; flex-shrink:0; background:var(--surface); color:var(--ink); display:flex; align-items:center; justify-content:center;}
+  .capsule-link-body{flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;}
+  .capsule-link-body strong{font-weight:600; font-size:0.92rem; line-height:1.35;}
+  .capsule-link-body span{font-size:0.8rem; color:var(--ink-muted); font-weight:500; line-height:1.4;}
+  .capsule-link-arrow{color:var(--ink-muted); flex-shrink:0;}
+  .mc-mail{margin-top:16px; font-size:0.86rem; color:rgba(248,239,230,0.7); font-weight:500;}
+  .mc-mail-alt{margin-top:8px; font-size:0.78rem; color:rgba(248,239,230,0.6); font-weight:500;}
+  .mc-mail-alt a{color:rgba(248,239,230,0.9); font-weight:600; text-underline-offset:3px;}
+  .mc-mail a{color:#F8EFE6; font-weight:700; text-underline-offset:3px;}
+  .mc-copy{
+    margin-top:12px; border:1.5px solid rgba(248,239,230,0.35); background:transparent; color:#F8EFE6;
+    font-family:'Poppins'; font-weight:600; font-size:0.82rem; padding:8px 16px; border-radius:999px; cursor:pointer;
+  }
+  .mc-copy:hover{border-color:#F8EFE6;}
+  .mc-ways{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:26px;}
+  @media (max-width:640px){ .mc-ways{grid-template-columns:1fr;} .mc-hero{padding:50px 22px 40px; border-radius:18px;} }
+  .mc-way{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:22px 20px;
+    display:flex; flex-direction:column; gap:8px; box-shadow:var(--shadow);
+  }
+  .mc-way-icon{width:42px; height:42px; border-radius:12px; background:var(--accent-soft); color:var(--ink); display:flex; align-items:center; justify-content:center; margin-bottom:4px;}
+  .mc-way h3{font-size:1.02rem; color:var(--ink);}
+  .mc-way p{font-size:0.92rem; line-height:1.55; color:var(--ink-muted); font-weight:500;}
+  .mc-question{margin-top:30px; text-align:center; font-family:'Poppins'; font-weight:700; font-size:clamp(1.15rem,4.5vw,1.4rem); color:var(--ink);}
+  .mc-question-sub{margin-top:8px; text-align:center; color:var(--ink-muted); font-weight:500; font-size:0.94rem;}
+  .mc-question-sub a{color:var(--ink); font-weight:700;}
+  .mc-note{
+    margin-top:30px; display:flex; gap:12px; align-items:flex-start; background:var(--surface-sunk);
+    border-radius:14px; padding:16px 18px; font-size:0.88rem; line-height:1.5; color:var(--ink-muted); font-weight:500;
+  }
+  .mc-note svg{flex-shrink:0; color:var(--ink); margin-top:2px;}
+  .mc-note button{border:none; background:none; padding:0; font:inherit; font-weight:700; color:var(--ink); text-decoration:underline; text-underline-offset:3px; cursor:pointer;}
+
+  @media (prefers-reduced-motion:reduce){
+    .capsule, .tab-panel{animation:none !important; opacity:1 !important; transform:none !important;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important;}
+    .pill-btn.pop svg{animation:none !important;}
+    .story-card, .story-circle-item{animation:none !important; opacity:1 !important; transform:none !important;}
+    .dbltap-heart.show{animation:none !important; opacity:0 !important;}
+    .story-viewer{animation:none !important; opacity:1 !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="wordmark-sm" id="homeLink">
+      <div class="wordmark-row">
+        <svg class="wordmark-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><polygon points="12 2.5 14.94 8.46 21.52 9.42 16.76 14.06 17.88 20.62 12 17.52 6.12 20.62 7.24 14.06 2.48 9.42 9.06 8.46" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+        <span>Lo que llevas puesto</span>
+      </div>
+    </div>
+    <button class="icon-btn" id="infoBtn" type="button" aria-label="¿Qué es esto?">?</button>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Secciones">
+    <a class="tab-btn" role="tab" href="#archivo" data-tab="archivo" aria-selected="true">Archivo</a>
+    <a class="tab-btn" role="tab" href="#historias" data-tab="historias" aria-selected="false">Historias</a>
+    <a class="tab-btn" role="tab" href="#mi-capsula" data-tab="mi-capsula" aria-selected="false">Mi cápsula</a>
+  </nav>
+</div>
+
+<section class="view tab-panel" id="tab-archivo" data-panel="archivo" role="tabpanel">
+  <div class="wrap">
+    <div class="feed-head">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><polygon points="12 2.5 14.94 8.46 21.52 9.42 16.76 14.06 17.88 20.62 12 17.52 6.12 20.62 7.24 14.06 2.48 9.42 9.06 8.46" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="eyebrow">Archivo colectivo</span>
+      <p class="stat-line" id="statLine"></p>
+    </div>
+
+    <div class="video-section">
+      <div id="featuredSlot"></div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PESTAÑA: HISTORIAS (cápsulas audiovisuales) ============ -->
+<section class="view tab-panel" id="tab-historias" data-panel="historias" role="tabpanel" hidden>
+  <div class="wrap">
+    <div class="caps-head">
+      <span class="eyebrow">Cápsulas audiovisuales</span>
+      <h1 class="caps-title">Historias que se llevan puestas</h1>
+      <p class="caps-intro">Cada cápsula parte de una prenda o un accesorio y de la persona que le dio sentido. Dale play y escúchala.</p>
+    </div>
+    <div class="caps-grid" id="capsGrid"></div>
+    <div class="caps-cta">
+      <p>¿Tu prenda también guarda una historia?</p>
+      <button type="button" class="link-btn" data-goto="mi-capsula">Crea tu cápsula →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PESTAÑA: MI CÁPSULA ============ -->
+<section class="view tab-panel" id="tab-mi-capsula" data-panel="mi-capsula" role="tabpanel" hidden>
+  <div class="wrap">
+    <div class="mc-hero">
+      <span class="mc-film top" aria-hidden="true"></span>
+      <span class="mc-film bottom" aria-hidden="true"></span>
+      <div class="mc-inner">
+        <svg class="mc-star" viewBox="0 0 24 24" fill="none" aria-hidden="true"><polygon points="12 2.5 14.94 8.46 21.52 9.42 16.76 14.06 17.88 20.62 12 17.52 6.12 20.62 7.24 14.06 2.48 9.42 9.06 8.46" fill="currentColor"/></svg>
+        <span class="mc-eyebrow">Mi cápsula</span>
+        <h1 class="mc-title">Tu historia también merece ser contada.</h1>
+        <p class="mc-lead">¿Tienes una prenda o un accesorio que guarda una historia importante para ti? Puedes hacer parte de <strong>Lo que llevas puesto</strong> creando tu propia cápsula audiovisual.</p>
+        <div class="mc-btns">
+        <a class="mc-btn js-gmail" id="mcMailBtn" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=viuibarra@gmail.com&amp;su=Quiero%20mi%20c%C3%A1psula%20%E2%80%93%20Lo%20que%20llevas%20puesto&amp;body=Hola%2C%0A%0AMe%20gustar%C3%ADa%20crear%20mi%20c%C3%A1psula%20audiovisual%20para%20Lo%20que%20llevas%20puesto.%0A%0ALa%20prenda%20o%20accesorio%3A%20%0ASu%20historia%2C%20en%20pocas%20palabras%3A%20%0APrefiero%20%28protagonizarla%20/%20mantener%20mi%20identidad%20en%20privado%29%3A%20%0A%0AGracias." target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+          Quiero mi cápsula
+        </a>
+        <a class="mc-btn mc-btn-wa js-wa" id="mcWaBtn" href="https://wa.me/573044816991?text=Hola%2C%20me%20gustar%C3%ADa%20crear%20mi%20c%C3%A1psula%20audiovisual%20para%20Lo%20que%20llevas%20puesto." target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.98L2 22l5.17-1.5A9.9 9.9 0 1 0 12.04 2zm0 18.1a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.07.89.9-2.99-.2-.31a8.2 8.2 0 1 1 6.85 3.74zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.56.12-.16.25-.64.8-.78.97-.14.16-.29.18-.53.06-.25-.12-1.04-.38-1.98-1.22-.73-.65-1.23-1.46-1.37-1.7-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.15.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.42h-.47a.9.9 0 0 0-.66.31c-.23.25-.86.85-.86 2.07s.88 2.4 1 2.57c.12.16 1.74 2.65 4.2 3.72.59.25 1.05.4 1.4.52.59.19 1.13.16 1.55.1.47-.07 1.46-.6 1.66-1.18.21-.58.21-1.07.15-1.18-.06-.1-.22-.16-.47-.28z"/></svg>
+          Escríbeme por WhatsApp
+        </a>
+        </div>
+        <p class="mc-mail">viuibarra@gmail.com<br>WhatsApp 304 481 6991</p>
+        <p class="mc-mail-alt">¿Usas otra app de correo? <a href="mailto:viuibarra@gmail.com?subject=Quiero%20mi%20c%C3%A1psula%20%E2%80%93%20Lo%20que%20llevas%20puesto&amp;body=Hola%2C%0A%0AMe%20gustar%C3%ADa%20crear%20mi%20c%C3%A1psula%20audiovisual%20para%20Lo%20que%20llevas%20puesto.%0A%0ALa%20prenda%20o%20accesorio%3A%20%0ASu%20historia%2C%20en%20pocas%20palabras%3A%20%0APrefiero%20%28protagonizarla%20/%20mantener%20mi%20identidad%20en%20privado%29%3A%20%0A%0AGracias.">Ábrela aquí</a></p>
+      </div>
+    </div>
+
+    <p class="mc-question">Tú decides cómo contarla</p>
+    <div class="mc-ways">
+      <div class="mc-way">
+        <span class="mc-way-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></span>
+        <h3>Puedes protagonizarla</h3>
+        <p>Aparece frente a la cámara junto a tu prenda y cuéntala con tu propia voz.</p>
+      </div>
+      <div class="mc-way">
+        <span class="mc-way-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M1 1l22 22"/></svg></span>
+        <h3>O mantenerte en privado</h3>
+        <p>Si prefieres mantener tu identidad en privado, puedo representarte y darle voz a tu historia.</p>
+      </div>
+    </div>
+
+    <p class="mc-question">¿Te gustaría crear la tuya?</p>
+    <p class="mc-question-sub">Escríbeme a <a class="js-gmail" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=viuibarra@gmail.com&amp;su=Quiero%20mi%20c%C3%A1psula%20%E2%80%93%20Lo%20que%20llevas%20puesto&amp;body=Hola%2C%0A%0AMe%20gustar%C3%ADa%20crear%20mi%20c%C3%A1psula%20audiovisual%20para%20Lo%20que%20llevas%20puesto.%0A%0ALa%20prenda%20o%20accesorio%3A%20%0ASu%20historia%2C%20en%20pocas%20palabras%3A%20%0APrefiero%20%28protagonizarla%20/%20mantener%20mi%20identidad%20en%20privado%29%3A%20%0A%0AGracias." target="_blank" rel="noopener">viuibarra@gmail.com</a> o por <a class="js-wa" href="https://wa.me/573044816991?text=Hola%2C%20me%20gustar%C3%ADa%20crear%20mi%20c%C3%A1psula%20audiovisual%20para%20Lo%20que%20llevas%20puesto." target="_blank" rel="noopener">WhatsApp</a>.</p>
+
+    <div class="mc-note">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+      <p>¿Prefieres escribirla? También puedes publicar tu historia en el archivo colectivo, con tu nombre o de forma anónima. <button type="button" id="mcWriteBtn">Compartir por escrito</button></p>
+    </div>
+  </div>
+</section>
+
+<button class="fab-compose" id="shareBtn" type="button" aria-label="Compartir mi historia">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+</button>
+
+<div id="overlayRoot"></div>
+<div id="storyViewerRoot"></div>
+
+
+<!-- =====================================================================
+  CONFIGURACIÓN DE FIREBASE
+  1) Crea un proyecto en https://console.firebase.google.com
+  2) Agrega una app web (icono </>) y copia aquí los valores de "firebaseConfig"
+  3) Activa Firestore Database y pega las reglas del archivo LEEME
+  Si dejas apiKey vacío, la página funciona en MODO LOCAL (solo en cada navegador).
+====================================================================== -->
+<script>
+window.LQCP_FIREBASE_CONFIG = {
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
+};
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+  var cfg = window.LQCP_FIREBASE_CONFIG || {};
+  if (cfg.apiKey && cfg.projectId && window.firebase){
+    try {
+      firebase.initializeApp(cfg);
+      window.LQCP_DB = firebase.firestore();
+      window.LQCP_MODE = "firebase";
+      return;
+    } catch(e){ console.error("Firebase init failed", e); }
+  }
+  /* ---- Modo local: imita la API de Firestore con localStorage ---- */
+  window.LQCP_MODE = "local";
+  var KEY = "lqcp_local_db_v1";
+  var data = {};
+  try { data = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){ data = {}; }
+  var listeners = [];
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e){} }
+  function notify(){ listeners.slice().forEach(function(l){ l(); }); }
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+  function bucket(path){ return data[path] || (data[path] = {}); }
+  function docSnap(path, id){
+    var d = bucket(path)[id];
+    return { id: id, exists: !!d, data: function(){ return d ? JSON.parse(JSON.stringify(d)) : undefined; } };
+  }
+  function Collection(path){ this.path = path; this._order = null; this._dir = "asc"; this._limit = 1e9; }
+  Collection.prototype.orderBy = function(f, dir){ var c = new Collection(this.path); c._order = f; c._dir = dir || "asc"; c._limit = this._limit; return c; };
+  Collection.prototype.limit = function(n){ var c = new Collection(this.path); c._order = this._order; c._dir = this._dir; c._limit = n; return c; };
+  Collection.prototype.add = function(obj){
+    var id = uid(); bucket(this.path)[id] = JSON.parse(JSON.stringify(obj)); save(); notify();
+    return Promise.resolve({ id: id });
+  };
+  Collection.prototype._snapshot = function(){
+    var b = bucket(this.path), self = this;
+    var ids = Object.keys(b);
+    if (self._order) ids.sort(function(x, y){
+      var a = b[x][self._order], c = b[y][self._order];
+      var r = a > c ? 1 : (a < c ? -1 : 0);
+      return self._dir === "desc" ? -r : r;
+    });
+    ids = ids.slice(0, self._limit);
+    var docs = ids.map(function(id){ return docSnap(self.path, id); });
+    return { empty: docs.length === 0, docs: docs };
+  };
+  Collection.prototype.onSnapshot = function(ok){
+    var self = this;
+    var l = function(){ ok(self._snapshot()); };
+    listeners.push(l); setTimeout(l, 0);
+    return function(){ var i = listeners.indexOf(l); if (i > -1) listeners.splice(i, 1); };
+  };
+  function Doc(path){
+    var p = path.split("/"); this.id = p.pop(); this.colPath = p.join("/"); this.path = path;
+  }
+  Doc.prototype.collection = function(name){ return new Collection(this.path + "/" + name); };
+  Doc.prototype.get = function(){ return Promise.resolve(docSnap(this.colPath, this.id)); };
+  Doc.prototype.update = function(patch){
+    var b = bucket(this.colPath);
+    if (!b[this.id]) return Promise.reject(new Error("not-found"));
+    Object.keys(patch).forEach(function(k){ b[this.id][k] = patch[k]; }, this);
+    save(); notify(); return Promise.resolve();
+  };
+  window.LQCP_DB = {
+    collection: function(name){ return new Collection(name); },
+    doc: function(path){ return new Doc(path); }
+  };
+  document.addEventListener("DOMContentLoaded", function(){
+    var b = document.createElement("div");
+    b.style.cssText = "background:#F4EAE0;color:#8C7361;font:600 12px/1.4 'Plus Jakarta Sans',sans-serif;text-align:center;padding:8px 12px;border-bottom:1px solid #E6D6C4;";
+    b.textContent = "Modo local: lo que publiques se guarda solo en este navegador. Conecta Firebase para compartirlo con todos.";
+    document.body.insertBefore(b, document.body.firstChild);
+  });
+})();
+</script>
+<script>
+(function(){
+  "use strict";
+
+  var state = { db: null, assets: null, unsubGallery: null, unsubVideos: null, unsubGarments: null, photoDataUrl: null, mode: "anon", openComments: null, videosList: [], storiesList: [], garmentsList: [] };
+
+  /* ================= db bootstrap (Firebase o modo local) ================= */
+  state.db = window.LQCP_DB || null;
+  subscribeGallery();
+
+  function renderStat(n){
+    var el = document.getElementById("statLine");
+    if (!el) return;
+    if (!state.db){ el.textContent = ""; return; }
+    el.innerHTML = n > 0
+      ? '<b>' + n + '</b> ' + (n === 1 ? "historia compartida" : "historias compartidas") + ' hasta ahora'
+      : "Sé la primera persona en compartir una historia.";
+  }
+
+  function escapeHtml(s){
+    var d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function timeAgo(iso){
+    if (!iso) return "";
+    var diff = Date.now() - new Date(iso).getTime();
+    var day = 86400000;
+    if (diff < 3600000) return "hace poco";
+    if (diff < day) return Math.floor(diff/3600000) + " h";
+    if (diff < day*30) return Math.floor(diff/day) + " d";
+    return new Date(iso).toLocaleDateString("es-CO", {month:"short", year:"numeric"});
+  }
+
+  function localReacted(id){
+    try { return localStorage.getItem("lqcp_reacted_" + id) === "1"; } catch(e){ return false; }
+  }
+  function setLocalReacted(id, val){
+    try {
+      if (val) localStorage.setItem("lqcp_reacted_" + id, "1");
+      else localStorage.removeItem("lqcp_reacted_" + id);
+    } catch(e){}
+  }
+
+  /* ================= community stories ================= */
+  function subscribeGallery(){
+    var grid0 = document.getElementById("galleryGrid");
+    if (!state.db){
+      if (grid0) grid0.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">No fue posible conectar con el archivo de historias en este momento.</div>';
+      renderStat(0);
+      return;
+    }
+    if (state.unsubGallery) return;
+    state.unsubGallery = state.db.collection("stories").orderBy("createdAt","desc").limit(60).onSnapshot(
+      function(qs){
+        state.storiesList = qs.empty ? [] : qs.docs.map(function(doc){ return { id: doc.id, data: doc.data() }; });
+        renderGallery();
+      },
+      function(){
+        if (grid0) grid0.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">No fue posible cargar las historias.</div>';
+      }
+    );
+  }
+
+  function displayName(data){
+    return (data.anonymous || !data.name) ? "Anónimo" : data.name;
+  }
+
+  function renderGallery(){
+    var grid = document.getElementById("galleryGrid");
+    var slot = document.getElementById("featuredSlot");
+    if (!grid || !slot) return;
+    var list = state.storiesList;
+    renderStat(list.length);
+    slot.innerHTML = ""; grid.innerHTML = "";
+    if (!list.length){
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">Todavía no hay historias. ¡Sé la primera persona en compartir la tuya!</div>';
+      return;
+    }
+    var featuredIdx = 0, best = -1;
+    list.forEach(function(it, i){ var r = it.data.reactionCount || 0; if (r > best){ best = r; featuredIdx = i; } });
+    slot.appendChild(featuredCard(list[featuredIdx].id, list[featuredIdx].data));
+    list.forEach(function(it, i){
+      if (i === featuredIdx) return;
+      grid.appendChild(storyCard(it.id, it.data, i));
+    });
+  }
+
+  function wireStoryCard(card, id, data, name){
+    var reactBtn = card.querySelector(".react-btn");
+    var commentBtn = card.querySelector(".comment-btn");
+    function openFn(){ openDetail(id, data, name, false); }
+    function doToggle(){
+      toggleReaction(id, data.reactionCount || 0, reactBtn, "stories");
+      reactBtn.classList.add("pop");
+      setTimeout(function(){ reactBtn.classList.remove("pop"); }, 400);
+    }
+    function doLike(){ if (localReacted(id)) return; doToggle(); }
+    attachDoubleTapLike(card, openFn, doLike);
+    reactBtn.addEventListener("click", function(e){ e.stopPropagation(); doToggle(); });
+    commentBtn.addEventListener("click", function(e){ e.stopPropagation(); openDetail(id, data, name, true); });
+  }
+
+  function storyCard(id, data, index){
+    var name = displayName(data);
+    var card = document.createElement("div");
+    card.className = "story-card dbltap-zone";
+    card.style.setProperty("--i", index);
+    var reacted = localReacted(id);
+    card.innerHTML =
+      '<span class="index-badge">' + (index + 1) + '</span>' +
+      (data.photo
+        ? '<img class="story-photo" src="' + data.photo + '" alt="">'
+        : '<div class="story-photo-placeholder"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 3h7l5 5v13H6z"/><path d="M13 3v5h5"/></svg></div>') +
+      '<div class="dbltap-heart" aria-hidden="true"><svg width="48" height="48" viewBox="0 0 24 24" fill="#fff"><path d="M12 20s-7-4.35-9.5-9C1 8 2.5 4.5 6 4c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.5.5 5 4 3.5 7-2.5 4.65-9.5 9-9.5 9z"/></svg></div>' +
+      '<div class="story-body">' +
+        (data.example ? '<span class="example-tag">Historia de ejemplo</span>' : '') +
+        '<p class="story-text"></p>' +
+        '<div class="story-meta"><span class="story-name"></span><span class="story-time"></span></div>' +
+        '<div class="story-actions">' +
+          '<button type="button" class="pill-btn react-btn' + (reacted ? " active" : "") + '">' + heartIcon(reacted) + '<span class="react-count">' + (data.reactionCount || 0) + '</span></button>' +
+          '<button type="button" class="pill-btn comment-btn">' + commentIcon() + '<span>' + (data.commentCount || 0) + '</span></button>' +
+        '</div>' +
+      '</div>';
+    card.querySelector(".story-text").textContent = data.text || "";
+    card.querySelector(".story-name").textContent = name;
+    card.querySelector(".story-time").textContent = timeAgo(data.createdAt);
+    wireStoryCard(card, id, data, name);
+    return card;
+  }
+
+  function featuredCard(id, data){
+    var name = displayName(data);
+    var card = document.createElement("div");
+    card.className = "featured-story dbltap-zone";
+    var reacted = localReacted(id);
+    card.innerHTML =
+      '<div class="featured-photo-zone">' +
+        (data.photo
+          ? '<img class="featured-photo" src="' + data.photo + '" alt="">'
+          : '<div class="featured-photo-placeholder"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 3h7l5 5v13H6z"/><path d="M13 3v5h5"/></svg></div>') +
+      '</div>' +
+      '<div class="dbltap-heart" aria-hidden="true"><svg width="64" height="64" viewBox="0 0 24 24" fill="#fff"><path d="M12 20s-7-4.35-9.5-9C1 8 2.5 4.5 6 4c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.5.5 5 4 3.5 7-2.5 4.65-9.5 9-9.5 9z"/></svg></div>' +
+      '<div class="featured-body">' +
+        '<span class="featured-tag">' + (data.example ? "Historia de ejemplo" : "Historia destacada") + '</span>' +
+        '<p class="featured-text"></p>' +
+        '<div class="story-meta"><span class="story-name"></span><span class="story-time"></span></div>' +
+        '<div class="story-actions">' +
+          '<button type="button" class="pill-btn react-btn' + (reacted ? " active" : "") + '">' + heartIcon(reacted) + '<span class="react-count">' + (data.reactionCount || 0) + '</span></button>' +
+          '<button type="button" class="pill-btn comment-btn">' + commentIcon() + '<span>' + (data.commentCount || 0) + ' ' + ((data.commentCount || 0) === 1 ? "comentario" : "comentarios") + '</span></button>' +
+        '</div>' +
+      '</div>';
+    card.querySelector(".featured-text").textContent = data.text || "";
+    card.querySelector(".story-name").textContent = name;
+    card.querySelector(".story-time").textContent = timeAgo(data.createdAt);
+    wireStoryCard(card, id, data, name);
+    return card;
+  }
+
+  /* ================= garments (object-only, no person attribution) ================= */
+  function subscribeGarments(){
+    var grid = document.getElementById("garmentGrid");
+    if (!grid) return;
+    if (!state.db){
+      if (grid) grid.innerHTML = '<div class="video-empty">No disponible en este momento.</div>';
+      return;
+    }
+    if (state.unsubGarments) return;
+    state.unsubGarments = state.db.collection("garments").orderBy("createdAt","desc").limit(60).onSnapshot(
+      function(qs){
+        state.garmentsList = qs.empty ? [] : qs.docs.map(function(doc){ return { id: doc.id, data: doc.data() }; });
+        renderGarments();
+      },
+      function(){ if (grid) grid.innerHTML = '<div class="video-empty">No fue posible cargar las prendas.</div>'; }
+    );
+  }
+
+  function renderGarments(){
+    var grid = document.getElementById("garmentGrid");
+    if (!grid) return;
+    if (!state.garmentsList.length){
+      grid.innerHTML = '<div class="empty-state">Sé la primera persona en compartir una prenda.</div>';
+      return;
+    }
+    grid.innerHTML = "";
+    state.garmentsList.forEach(function(it, i){ grid.appendChild(garmentCard(it.id, it.data, i)); });
+  }
+
+  function garmentCard(id, data, index){
+    var card = document.createElement("div");
+    card.className = "story-card dbltap-zone";
+    card.style.setProperty("--i", index);
+    var reacted = localReacted(id);
+    var reactionCount = data.reactionCount || 0;
+    card.innerHTML =
+      (data.photo
+        ? '<img class="story-photo" src="' + data.photo + '" alt="">'
+        : '<div class="story-photo-placeholder"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 3h7l5 5v13H6z"/><path d="M13 3v5h5"/></svg></div>') +
+      '<div class="dbltap-heart" aria-hidden="true"><svg width="48" height="48" viewBox="0 0 24 24" fill="#fff"><path d="M12 20s-7-4.35-9.5-9C1 8 2.5 4.5 6 4c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.5.5 5 4 3.5 7-2.5 4.65-9.5 9-9.5 9z"/></svg></div>' +
+      '<div class="story-body">' +
+        '<p class="garment-title"></p>' +
+        '<p class="garment-story-text"></p>' +
+        '<div class="garment-actions"><button type="button" class="pill-btn react-btn' + (reacted ? " active" : "") + '">' + heartIcon(reacted) + '<span class="react-count">' + reactionCount + '</span></button></div>' +
+      '</div>';
+    card.querySelector(".garment-title").textContent = data.title || "Prenda sin nombre";
+    card.querySelector(".garment-story-text").textContent = data.story || "";
+    var reactBtn = card.querySelector(".react-btn");
+    function openFn(){ openGarmentDetail(id, data); }
+    function doLike(){
+      if (localReacted(id)) return;
+      toggleReaction(id, reactionCount, reactBtn, "garments");
+      reactBtn.classList.add("pop");
+      setTimeout(function(){ reactBtn.classList.remove("pop"); }, 400);
+    }
+    attachDoubleTapLike(card, openFn, doLike);
+    reactBtn.addEventListener("click", function(e){
+      e.stopPropagation();
+      var btn = e.currentTarget;
+      toggleReaction(id, reactionCount, btn, "garments");
+      btn.classList.add("pop");
+      setTimeout(function(){ btn.classList.remove("pop"); }, 400);
+    });
+    return card;
+  }
+
+  function openGarmentDetail(id, data){
+    var reacted = localReacted(id);
+    var reactionCount = data.reactionCount || 0;
+    openOverlay(
+      (data.photo ? '<img class="garment-detail-photo" src="' + data.photo + '" alt="">' : '') +
+      '<div class="overlay-head"><h2>Prenda</h2><button class="overlay-close" type="button" aria-label="Cerrar">&times;</button></div>' +
+      '<div class="garment-detail-body">' +
+        '<p class="garment-detail-title"></p>' +
+        '<p class="garment-detail-text"></p>' +
+        '<div class="modal-actions">' +
+          '<button type="button" class="pill-btn react-btn' + (reacted ? " active" : "") + '">' + heartIcon(reacted) + '<span class="react-count">' + reactionCount + '</span></button>' +
+        '</div>' +
+      '</div>',
+      function(panel){
+        panel.querySelector(".garment-detail-title").textContent = data.title || "Prenda sin nombre";
+        panel.querySelector(".garment-detail-text").textContent = data.story || "";
+        panel.querySelector(".react-btn").addEventListener("click", function(e){
+          var btn = e.currentTarget;
+          toggleReaction(id, reactionCount, btn, "garments");
+          btn.classList.add("pop");
+          setTimeout(function(){ btn.classList.remove("pop"); }, 400);
+        });
+      }
+    );
+  }
+
+  function openGarmentForm(){
+    openOverlay(
+      '<div class="overlay-head"><h2>Agregar prenda</h2><button class="overlay-close" type="button" aria-label="Cerrar">&times;</button></div>' +
+      '<div class="overlay-body">' +
+        '<form class="share-form" id="garmentForm" novalidate>' +
+          '<div class="field">' +
+            '<label for="garmentPhotoInput">Foto de la prenda o accesorio (opcional)</label>' +
+            '<input type="file" id="garmentPhotoInput" accept="image/*" hidden>' +
+            '<label class="photo-drop" id="garmentPhotoDrop" for="garmentPhotoInput">' +
+              '<span class="photo-drop-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><circle cx="8.5" cy="10" r="1.5" fill="currentColor"/><path d="M21 16l-5.5-5-4 4L9 13l-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+              '<span><span>Toca para subir una foto</span><small>JPG o PNG · se comprime automáticamente</small></span>' +
+            '</label>' +
+            '<div id="garmentPhotoPreviewWrap" hidden><div class="photo-preview"><img id="garmentPhotoPreviewImg" alt="Vista previa de la foto"><button type="button" class="photo-remove" id="garmentPhotoRemove" aria-label="Quitar foto">&times;</button></div></div>' +
+          '</div>' +
+          '<div class="field">' +
+            '<label for="garmentTitle">Nombre de la prenda o accesorio</label>' +
+            '<input type="text" id="garmentTitle" maxlength="60" placeholder="Ej. Chaqueta de mi papá" required>' +
+          '</div>' +
+          '<div class="field">' +
+            '<label for="garmentStory">Su historia</label>' +
+            '<textarea id="garmentStory" placeholder="¿Qué momento, recuerdo o vínculo guarda esta prenda?" required minlength="15" maxlength="1200"></textarea>' +
+            '<span class="hint">Mínimo 15 caracteres. No se pide nombre de persona — esta sección es solo sobre el objeto.</span>' +
+          '</div>' +
+          '<div id="garmentFormMsg"></div>' +
+          '<button type="submit" class="submit-btn" id="garmentSubmitBtn">Publicar prenda</button>' +
+        '</form>' +
+      '</div>',
+      function(panel, close){ wireGarmentForm(panel, close); }
+    );
+  }
+
+  function wireGarmentForm(panel, close){
+    var localState = { photoDataUrl: null };
+    var photoInput = panel.querySelector("#garmentPhotoInput");
+    var photoDrop = panel.querySelector("#garmentPhotoDrop");
+    var photoPreviewWrap = panel.querySelector("#garmentPhotoPreviewWrap");
+    var photoPreviewImg = panel.querySelector("#garmentPhotoPreviewImg");
+    panel.querySelector("#garmentPhotoRemove").addEventListener("click", function(e){
+      e.preventDefault();
+      localState.photoDataUrl = null;
+      photoInput.value = "";
+      photoPreviewWrap.hidden = true;
+      photoDrop.hidden = false;
+    });
+    photoInput.addEventListener("change", function(){
+      var file = photoInput.files && photoInput.files[0];
+      if (!file) return;
+      compressImage(file).then(function(dataUrl){
+        localState.photoDataUrl = dataUrl;
+        photoPreviewImg.src = dataUrl;
+        photoPreviewWrap.hidden = false;
+        photoDrop.hidden = true;
+      }).catch(function(){
+        var msgEl = panel.querySelector("#garmentFormMsg");
+        msgEl.className = "form-msg error"; msgEl.textContent = "No se pudo procesar esa imagen. Intenta con otra foto.";
+      });
+    });
+
+    panel.querySelector("#garmentForm").addEventListener("submit", async function(e){
+      e.preventDefault();
+      var msgEl = panel.querySelector("#garmentFormMsg");
+      msgEl.className = ""; msgEl.textContent = "";
+      var title = panel.querySelector("#garmentTitle").value.trim();
+      var story = panel.querySelector("#garmentStory").value.trim();
+      if (!title){ msgEl.className = "form-msg error"; msgEl.textContent = "Escribe el nombre de la prenda o accesorio."; return; }
+      if (story.length < 15){ msgEl.className = "form-msg error"; msgEl.textContent = "Cuéntanos un poco más: mínimo 15 caracteres."; return; }
+      if (!state.db){ msgEl.className = "form-msg error"; msgEl.textContent = "No fue posible conectar con el archivo de prendas."; return; }
+
+      var submitBtn = panel.querySelector("#garmentSubmitBtn");
+      submitBtn.disabled = true; submitBtn.textContent = "Publicando…";
+      try {
+        await state.db.collection("garments").add({
+          title: title, story: story, photo: localState.photoDataUrl || null, reactionCount: 0, createdAt: new Date().toISOString()
+        });
+        close();
+      } catch(err){
+        msgEl.className = "form-msg error"; msgEl.textContent = "Algo salió mal al publicar. Intenta de nuevo.";
+        submitBtn.disabled = false; submitBtn.textContent = "Publicar prenda";
+      }
+    });
+  }
+
+  /* ================= video capsules ================= */
+  function assetUrl(id){ return "/_blob/" + id; }
+
+  function subscribeVideos(){
+    var row = document.getElementById("videoRow");
+    if (!row) return;
+    if (!state.db){
+      row.innerHTML = '<div class="video-empty">No fue posible conectar con las cápsulas de video.</div>';
+      return;
+    }
+    if (state.unsubVideos) return;
+    state.unsubVideos = state.db.collection("videos").orderBy("createdAt","desc").limit(30).onSnapshot(
+      function(qs){
+        if (qs.empty){
+          row.innerHTML = '<div class="video-empty">Todavía no hay cápsulas de video. Vuelve pronto.</div>';
+          state.videosList = [];
+          return;
+        }
+        state.videosList = qs.docs.map(function(doc){ return { id: doc.id, data: doc.data() }; });
+        row.innerHTML = "";
+        state.videosList.forEach(function(it, i){ row.appendChild(videoThumb(it.id, it.data, i)); });
+      },
+      function(){ row.innerHTML = '<div class="video-empty">No fue posible cargar los videos.</div>'; }
+    );
+  }
+
+  function videoThumb(id, data, index){
+    var item = document.createElement("button");
+    item.type = "button";
+    item.className = "story-circle-item";
+    item.style.setProperty("--i", index);
+    item.innerHTML =
+      '<span class="story-ring">' +
+        '<span class="story-ring-inner">' +
+          (data.videoAssetId
+            ? '<video src="' + assetUrl(data.videoAssetId) + '" preload="metadata" muted playsinline></video>'
+            : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h7l5 5v13H6z"/></svg>') +
+          '<span class="ring-play"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="11" fill="rgba(0,0,0,0.3)"/><path d="M10 8.5l6 3.5-6 3.5z" fill="#fff"/></svg></span>' +
+        '</span>' +
+      '</span>' +
+      '<span class="story-circle-label"></span>';
+    item.querySelector(".story-circle-label").textContent = data.title || "Historia en video";
+    item.addEventListener("click", function(){ openStoryViewer(index); });
+    return item;
+  }
+
+  /* ================= full-screen story viewer ================= */
+  function openStoryViewer(startIndex){
+    var root = document.getElementById("storyViewerRoot");
+    var list = state.videosList;
+    if (!list.length) return;
+    var current = startIndex;
+    var AUTOPLAY_MS = 6000;
+    var timer = null;
+
+    var viewer = document.createElement("div");
+    viewer.className = "story-viewer";
+    viewer.innerHTML =
+      '<div class="story-viewer-progress"></div>' +
+      '<button type="button" class="story-viewer-close" aria-label="Cerrar">&times;</button>' +
+      '<button type="button" class="story-viewer-nav prev" aria-label="Anterior"></button>' +
+      '<button type="button" class="story-viewer-nav next" aria-label="Siguiente"></button>' +
+      '<button type="button" class="story-viewer-arrow prev" aria-label="Anterior"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>' +
+      '<button type="button" class="story-viewer-arrow next" aria-label="Siguiente"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>' +
+      '<div class="story-viewer-media"></div>' +
+      '<div class="story-viewer-caption"><p class="story-viewer-title"></p><p class="story-viewer-text"></p></div>';
+
+    var progressWrap = viewer.querySelector(".story-viewer-progress");
+    list.forEach(function(){
+      var seg = document.createElement("span");
+      seg.className = "segment";
+      seg.innerHTML = "<i></i>";
+      progressWrap.appendChild(seg);
+    });
+
+    function clearTimer(){ if (timer){ clearTimeout(timer); timer = null; } }
+
+    function render(){
+      clearTimer();
+      var it = list[current];
+      var data = it.data;
+      var hasFile = !!data.videoAssetId;
+      var hasLink = !hasFile && !!data.videoUrl;
+
+      var segs = progressWrap.querySelectorAll(".segment");
+      segs.forEach(function(seg, i){
+        seg.classList.toggle("done", i < current);
+        seg.classList.toggle("active", i === current);
+      });
+
+      var media = viewer.querySelector(".story-viewer-media");
+      media.innerHTML = hasFile
+        ? '<video src="' + assetUrl(data.videoAssetId) + '" controls autoplay playsinline></video>'
+        : (hasLink
+          ? '<div class="story-viewer-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 3h7l5 5v13H6z"/></svg><a class="video-external-link" href="' + data.videoUrl + '" target="_blank" rel="noopener">Ver video <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a><p class="video-detail-note">Este video está alojado fuera de la plataforma y se abre en una pestaña nueva.</p></div>'
+          : '<div class="story-viewer-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 3h7l5 5v13H6z"/></svg></div>');
+
+      viewer.querySelector(".story-viewer-title").textContent = data.title || "Historia en video";
+      viewer.querySelector(".story-viewer-text").textContent = (data.story || "") + (data.story ? "  ·  " : "") + timeAgo(data.createdAt);
+
+      viewer.querySelector(".story-viewer-arrow.prev").disabled = current === 0;
+      viewer.querySelector(".story-viewer-arrow.next").disabled = current === list.length - 1;
+
+      if (hasFile){
+        var vid = media.querySelector("video");
+        vid.addEventListener("ended", goNext);
+        vid.addEventListener("error", function(){
+          media.innerHTML = '<div class="story-viewer-placeholder"><p class="video-detail-note">No se pudo reproducir este video en tu navegador.</p></div>';
+          timer = setTimeout(goNext, AUTOPLAY_MS);
+        });
+        var pp = vid.play();
+        if (pp && pp.catch) pp.catch(function(){ vid.muted = true; vid.play().catch(function(){}); });
+      } else {
+        timer = setTimeout(goNext, AUTOPLAY_MS);
+      }
+    }
+
+    function goNext(){
+      if (current < list.length - 1){ current++; render(); }
+      else close();
+    }
+    function goPrev(){
+      if (current > 0){ current--; render(); }
+    }
+    function close(){
+      clearTimer();
+      viewer.remove();
+    }
+
+    viewer.querySelector(".story-viewer-close").addEventListener("click", close);
+    viewer.querySelector(".story-viewer-nav.prev").addEventListener("click", goPrev);
+    viewer.querySelector(".story-viewer-nav.next").addEventListener("click", goNext);
+    viewer.querySelector(".story-viewer-arrow.prev").addEventListener("click", goPrev);
+    viewer.querySelector(".story-viewer-arrow.next").addEventListener("click", goNext);
+
+    root.appendChild(viewer);
+    render();
+  }
+
+  function openVideoForm(){
+    if (state.assets){
+      openOverlay(
+        '<div class="overlay-head"><h2>Agregar cápsula de video</h2><button class="overlay-close" type="button" aria-label="Cerrar">&times;</button></div>' +
+        '<div class="overlay-body">' +
+          '<form class="share-form" id="videoForm" novalidate>' +
+            '<div class="field">' +
+              '<label for="videoFile">Archivo de video</label>' +
+              '<input type="file" id="videoFile" accept="video/mp4,video/webm,video/quicktime,.mp4,.mov,.m4v,.webm" required>' +
+              '<span class="hint">MP4 o MOV · hasta 20&nbsp;MB.</span>' +
+              '<div id="videoPreviewWrap" hidden><div class="video-form-preview"><video id="videoPreviewEl" controls muted></video></div></div>' +
+            '</div>' +
+            '<div class="field">' +
+              '<label for="videoTitle">Prenda o accesorio</label>' +
+              '<input type="text" id="videoTitle" maxlength="60" placeholder="Ej. Chaqueta de mi papá" required>' +
+            '</div>' +
+            '<div class="field">' +
+              '<label for="videoStory">Historia (opcional, aparece junto al video)</label>' +
+              '<textarea id="videoStory" maxlength="600" placeholder="Contexto breve de la cápsula&hellip;"></textarea>' +
+            '</div>' +
+            '<div id="videoFormMsg"></div>' +
+            '<button type="submit" class="submit-btn" id="videoSubmitBtn">Publicar cápsula</button>' +
+          '</form>' +
+        '</div>',
+        function(panel, close){ wireVideoForm(panel, close); }
+      );
+    } else {
+      openOverlay(
+        '<div class="overlay-head"><h2>Agregar cápsula de video</h2><button class="overlay-close" type="button" aria-label="Cerrar">&times;</button></div>' +
+        '<div class="overlay-body">' +
+          '<form class="share-form" id="videoLinkForm" novalidate>' +
+            '<div class="field">' +
+              '<label for="videoUrlInput">Link del video</label>' +
+              '<input type="text" id="videoUrlInput" placeholder="https://" required>' +
+              '<span class="hint">Sube tu video a YouTube (como "no listado"), Google Drive o similar, y pega aquí el link. Se abre en pestaña nueva al verlo.</span>' +
+            '</div>' +
+            '<div class="field">' +
+              '<label for="videoTitle">Prenda o accesorio</label>' +
+              '<input type="text" id="videoTitle" maxlength="60" placeholder="Ej. Chaqueta de mi papá" required>' +
+            '</div>' +
+            '<div class="field">' +
+              '<label for="videoStory">Historia (opcional, aparece junto al video)</label>' +
+              '<textarea id="videoStory" maxlength="600" placeholder="Contexto breve de la cápsula&hellip;"></textarea>' +
+            '</div>' +
+            '<div id="videoFormMsg"></div>' +
+            '<button type="submit" class="submit-btn" id="videoLinkSubmitBtn">Publicar cápsula</button>' +
+          '</form>' +
+        '</div>',
+        function(panel, close){ wireVideoLinkForm(panel, close); }
+      );
+    }
+  }
+
+  function wireVideoLinkForm(panel, close){
+    panel.querySelector("#videoLinkForm").addEventListener("submit", async function(e){
+      e.preventDefault();
+      var msgEl = panel.querySelector("#videoFormMsg");
+      msgEl.className = ""; msgEl.textContent = "";
+      var url = panel.querySelector("#videoUrlInput").value.trim();
+      var title = panel.querySelector("#videoTitle").value.trim();
+      var story = panel.querySelector("#videoStory").value.trim();
+      if (!url){ msgEl.className = "form-msg error"; msgEl.textContent = "Pega el link del video."; return; }
+      if (!title){ msgEl.className = "form-msg error"; msgEl.textContent = "Escribe a qué prenda o accesorio pertenece."; return; }
+      if (!state.db){ msgEl.className = "form-msg error"; msgEl.textContent = "No fue posible conectar con el archivo de historias."; return; }
+
+      var submitBtn = panel.querySelector("#videoLinkSubmitBtn");
+      submitBtn.disabled = true; submitBtn.textContent = "Publicando…";
+      try {
+        await state.db.collection("videos").add({
+          title: title, story: story || null, videoUrl: url, createdAt: new Date().toISOString()
+        });
+        close();
+      } catch(err){
+        msgEl.className = "form-msg error"; msgEl.textContent = "Algo salió mal al publicar. Intenta de nuevo.";
+        submitBtn.disabled = false; submitBtn.textContent = "Publicar cápsula";
+      }
+    });
+  }
+
+  function wireVideoForm(panel, close){
+    var fileInput = panel.querySelector("#videoFile");
+    var previewWrap = panel.querySelector("#videoPreviewWrap");
+    var previewEl = panel.querySelector("#videoPreviewEl");
+    var selectedFile = null;
+
+    fileInput.addEventListener("change", function(){
+      var file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+      if (file.size > 20 * 1024 * 1024){
+        var msgEl0 = panel.querySelector("#videoFormMsg");
+        msgEl0.className = "form-msg error"; msgEl0.textContent = "El video pesa demasiado. El límite es 20 MB.";
+        fileInput.value = "";
+        return;
+      }
+      selectedFile = file;
+      previewEl.src = URL.createObjectURL(file);
+      previewWrap.hidden = false;
+    });
+
+    panel.querySelector("#videoForm").addEventListener("submit", async function(e){
+      e.preventDefault();
+      var msgEl = panel.querySelector("#videoFormMsg");
+      msgEl.className = ""; msgEl.textContent = "";
+      var title = panel.querySelector("#videoTitle").value.trim();
+      var story = panel.querySelector("#videoStory").value.trim();
+      if (!selectedFile){ msgEl.className = "form-msg error"; msgEl.textContent = "Selecciona un archivo de video."; return; }
+      if (!title){ msgEl.className = "form-msg error"; msgEl.textContent = "Escribe a qué prenda o accesorio pertenece."; return; }
+      if (!state.assets || !state.db){ msgEl.className = "form-msg error"; msgEl.textContent = "No fue posible conectar con el almacenamiento de video."; return; }
+
+      var submitBtn = panel.querySelector("#videoSubmitBtn");
+      submitBtn.disabled = true; submitBtn.textContent = "Publicando…";
+      try {
+        var isWebm = /\.webm$/i.test(selectedFile.name) || selectedFile.type === "video/webm";
+        var uploaded = await state.assets.upload(selectedFile, { type: isWebm ? "video/webm" : "video/mp4" });
+        await state.db.collection("videos").add({
+          title: title, story: story || null, videoAssetId: uploaded.id, createdAt: new Date().toISOString()
+        });
+        close();
+      } catch(err){
+        var code = err && err.code;
+        var txt = "Algo salió mal al subir el video. Intenta de nuevo.";
+        if (code === "too_large") txt = "El video pesa más de 20 MB. Recórtalo o expórtalo más liviano.";
+        else if (code === "unsupported_type") txt = "Ese formato no es compatible. Usa MP4 o MOV.";
+        else if (code === "quota_or_state") txt = "Se llenó el espacio de almacenamiento de videos.";
+        msgEl.className = "form-msg error"; msgEl.textContent = txt;
+        submitBtn.disabled = false; submitBtn.textContent = "Publicar cápsula";
+      }
+    });
+  }
+
+  function heartIcon(filled){
+    return '<svg width="15" height="15" viewBox="0 0 24 24" fill="' + (filled ? "currentColor" : "none") + '" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.35-9.5-9C1 8 2.5 4.5 6 4c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.5.5 5 4 3.5 7-2.5 4.65-9.5 9-9.5 9z"/></svg>';
+  }
+  function commentIcon(){
+    return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-8.9 8.4A9 9 0 0 1 4 19l-3 1 1-3.2A8.4 8.4 0 0 1 12.1 4a8.4 8.4 0 0 1 8.9 7.5z"/></svg>';
+  }
+
+  /* ================= double-tap-to-like (Instagram-style) ================= */
+  function attachDoubleTapLike(el, openDetailFn, likeFn){
+    var pendingTap = null;
+    function showHeart(){
+      var heart = el.querySelector(".dbltap-heart");
+      if (!heart) return;
+      heart.classList.remove("show");
+      void heart.offsetWidth;
+      heart.classList.add("show");
+    }
+    el.addEventListener("click", function(e){
+      e.preventDefault();
+      if (pendingTap){
+        clearTimeout(pendingTap);
+        pendingTap = null;
+        showHeart();
+        likeFn();
+        return;
+      }
+      pendingTap = setTimeout(function(){
+        pendingTap = null;
+        openDetailFn();
+      }, 260);
+    });
+  }
+
+  async function toggleReaction(id, currentCount, btnEl, collection){
+    if (!state.db) return;
+    collection = collection || "stories";
+    var reacted = localReacted(id);
+    var newCount = reacted ? Math.max(0, currentCount - 1) : currentCount + 1;
+    btnEl.classList.toggle("active", !reacted);
+    btnEl.innerHTML = heartIcon(!reacted) + '<span class="react-count">' + newCount + '</span>';
+    setLocalReacted(id, !reacted);
+    try { await state.db.doc(collection + "/" + id).update({ reactionCount: newCount }); }
+    catch(e){ /* onSnapshot will reconcile the true value */ }
+  }
+
+  /* ================= overlays ================= */
+  function openOverlay(innerHtml, onMount){
+    var root = document.getElementById("overlayRoot");
+    var backdrop = document.createElement("div");
+    backdrop.className = "overlay-backdrop";
+    backdrop.innerHTML = '<div class="overlay-panel" role="dialog" aria-modal="true">' + innerHtml + '</div>';
+    function close(){
+      if (state.openComments) { state.openComments(); state.openComments = null; }
+      backdrop.remove();
+    }
+    backdrop.addEventListener("click", function(e){ if (e.target === backdrop) close(); });
+    root.appendChild(backdrop);
+    var panel = backdrop.querySelector(".overlay-panel");
+    var closeBtn = panel.querySelector(".overlay-close");
+    if (closeBtn) closeBtn.addEventListener("click", close);
+    if (onMount) onMount(panel, close);
+    return { panel: panel, close: close };
+  }
+
+  document.getElementById("infoBtn").addEventListener("click", function(){
+    openOverlay(
+      '<div class="overlay-head"><h2>¿Qué es esto?</h2><button class="overlay-close" type="button" aria-label="Cerrar">&times;</button></div>' +
+      '<div class="overlay-body">' +
+        '<p class="info-copy"><strong>Lo que llevas puesto</strong> es una experiencia museográfica que usa prendas y accesorios personales como puntos de entrada a historias reales.</p>' +
+        '<p class="info-copy" style="margin-top:14px;">Esta plataforma es la continuación: aquí puedes conocer otras prendas y sus historias, o compartir una propia. Una historia puede detonar otra.</p>' +
+        '<p class="how-title">¿Cómo funciona?</p>' +
+        '<div class="how-steps">' +
+          '<div class="how-step"><span class="how-num">1</span><p>Mira el objeto y lee su pregunta.</p></div>' +
+          '<div class="how-step"><span class="how-num">2</span><p>Escanea el QR y descubre su historia.</p></div>' +
+          '<div class="how-step"><span class="how-num">3</span><p>Vuelve a mirar el objeto.</p></div>' +
+          '<div class="how-step"><span class="how-num">4</span><p>Piensa en lo tuyo: ¿y tú, qué llevas puesto?</p></div>' +
+        '</div>' +
+      '</div>'
+    );
+  });
+
+  function openDetail(id, data, name, focusComments){
+    var reacted = localReacted(id);
+    var reactionCount = data.reactionCount || 0;
+    var o = openOverlay(
+      (data.photo ? '<img class="modal-photo" src="' + data.photo + '" alt="">' : '') +
+      '<div class="overlay-head"><h2>Historia</h2><button class="overlay-close" type="button" aria-label="Cerrar">&times;</button></div>' +
+      '<div class="overlay-body">' +
+        (data.example ? '<span class="example-tag">Historia de ejemplo</span>' : '') +
+        '<p class="modal-text"></p>' +
+        '<p class="modal-meta"></p>' +
+        '<div class="modal-actions">' +
+          '<button type="button" class="pill-btn react-btn' + (reacted ? " active" : "") + '">' + heartIcon(reacted) + '<span class="react-count">' + reactionCount + '</span> Me identifico</button>' +
+        '</div>' +
+        '<div class="comments-block">' +
+          '<p class="comments-title">Comentarios</p>' +
+          '<div class="comments-list"><div class="comment-empty">Cargando&hellip;</div></div>' +
+          '<form class="comment-form">' +
+            '<textarea class="comment-text-input" rows="2" maxlength="400" placeholder="Escribe algo para esta persona…" required></textarea>' +
+            '<div class="comment-form-row">' +
+              '<input type="text" class="comment-name-input" maxlength="40" placeholder="Tu nombre (opcional)">' +
+              '<button type="submit" class="comment-submit">Enviar</button>' +
+            '</div>' +
+          '</form>' +
+        '</div>' +
+      '</div>',
+      function(panel){
+        panel.querySelector(".modal-text").textContent = data.text || "";
+        panel.querySelector(".modal-meta").textContent = name + " · " + timeAgo(data.createdAt);
+        panel.querySelector(".react-btn").addEventListener("click", function(e){
+          var btn = e.currentTarget;
+          toggleReactionDetail(id, btn);
+          btn.classList.add("pop");
+          setTimeout(function(){ btn.classList.remove("pop"); }, 400);
+        });
+        mountComments(id, panel);
+      }
+    );
+  }
+
+  async function toggleReactionDetail(id, btnEl){
+    if (!state.db) return;
+    var countEl = btnEl.querySelector(".react-count");
+    var current = parseInt(countEl.textContent, 10) || 0;
+    var reacted = localReacted(id);
+    var newCount = reacted ? Math.max(0, current - 1) : current + 1;
+    btnEl.classList.toggle("active", !reacted);
+    btnEl.innerHTML = heartIcon(!reacted) + '<span class="react-count">' + newCount + '</span> Me identifico';
+    setLocalReacted(id, !reacted);
+    try { await state.db.doc("stories/" + id).update({ reactionCount: newCount }); } catch(e){}
+  }
+
+  function mountComments(storyId, panel){
+    var list = panel.querySelector(".comments-list");
+    var form = panel.querySelector(".comment-form");
+
+    if (state.db){
+      var unsub = state.db.doc("stories/" + storyId).collection("comments").orderBy("createdAt","asc").limit(100).onSnapshot(
+        function(qs){
+          if (qs.empty){ list.innerHTML = '<div class="comment-empty">Sé la primera persona en comentar.</div>'; return; }
+          list.innerHTML = "";
+          qs.docs.forEach(function(doc){
+            var c = doc.data();
+            var item = document.createElement("div");
+            item.className = "comment-item";
+            item.innerHTML = '<div class="comment-name"></div><div class="comment-text"></div>';
+            item.querySelector(".comment-name").textContent = c.anonymous ? "Anónimo" : (c.name || "Anónimo");
+            item.querySelector(".comment-text").textContent = c.text || "";
+            list.appendChild(item);
+          });
+        },
+        function(){ list.innerHTML = '<div class="comment-empty">No fue posible cargar los comentarios.</div>'; }
+      );
+      state.openComments = unsub;
+    } else {
+      list.innerHTML = '<div class="comment-empty">No fue posible conectar con los comentarios.</div>';
+    }
+
+    form.addEventListener("submit", async function(e){
+      e.preventDefault();
+      var textInput = form.querySelector(".comment-text-input");
+      var nameInput = form.querySelector(".comment-name-input");
+      var text = textInput.value.trim();
+      if (!text || !state.db) return;
+      var name = nameInput.value.trim();
+      var submitBtn = form.querySelector(".comment-submit");
+      submitBtn.disabled = true;
+      try {
+        await state.db.doc("stories/" + storyId).collection("comments").add({
+          text: text, name: name || null, anonymous: !name, createdAt: new Date().toISOString()
+        });
+        textInput.value = ""; nameInput.value = "";
+        try {
+          var snap = await state.db.doc("stories/" + storyId).get();
+          var current = (snap.exists && snap.data().commentCount) || 0;
+          await state.db.doc("stories/" + storyId).update({ commentCount: current + 1 });
+        } catch(e2){}
+      } catch(err){ /* keep the typed text so the person can retry */ }
+      submitBtn.disabled = false;
+    });
+  }
+
+  /* ================= share overlay ================= */
+  function openShare(){
+    var o = openOverlay(
+      '<div class="overlay-head"><h2>Comparte tu historia</h2><button class="overlay-close" type="button" aria-label="Cerrar">&times;</button></div>' +
+      '<div class="overlay-body">' +
+        '<div id="shareFormWrap">' +
+          '<form class="share-form" id="storyForm" novalidate>' +
+            '<div class="field">' +
+              '<label for="photoInput">Foto de tu prenda o accesorio (opcional)</label>' +
+              '<input type="file" id="photoInput" accept="image/*" hidden>' +
+              '<label class="photo-drop" id="photoDrop" for="photoInput">' +
+                '<span class="photo-drop-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><circle cx="8.5" cy="10" r="1.5" fill="currentColor"/><path d="M21 16l-5.5-5-4 4L9 13l-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+                '<span><span>Toca para subir una foto</span><small>JPG o PNG · se comprime automáticamente</small></span>' +
+              '</label>' +
+              '<div id="photoPreviewWrap" hidden><div class="photo-preview"><img id="photoPreviewImg" alt="Vista previa de la foto"><button type="button" class="photo-remove" id="photoRemove" aria-label="Quitar foto">&times;</button></div></div>' +
+            '</div>' +
+            '<div class="field">' +
+              '<label for="storyText">La historia detrás de esta prenda o accesorio</label>' +
+              '<textarea id="storyText" placeholder="¿A quién pertenece o perteneció? ¿Qué momento, persona o recuerdo guarda?" required minlength="15" maxlength="1200"></textarea>' +
+              '<span class="hint">Mínimo 15 caracteres.</span>' +
+            '</div>' +
+            '<div class="field">' +
+              '<label>¿Cómo quieres compartirla?</label>' +
+              '<div class="toggle-row" role="group" aria-label="Identificarse o permanecer anónimo">' +
+                '<button type="button" class="toggle-btn" id="btnAnon" aria-pressed="true">Anónimo</button>' +
+                '<button type="button" class="toggle-btn" id="btnNamed" aria-pressed="false">Con mi nombre</button>' +
+              '</div>' +
+            '</div>' +
+            '<div class="field" id="nameField" hidden>' +
+              '<label for="nameInput">Tu nombre</label>' +
+              '<input type="text" id="nameInput" maxlength="60" placeholder="Como quieras que aparezca">' +
+            '</div>' +
+            '<button type="button" class="capsule-link-row" id="goMiCapsula">' +
+              '<span class="capsule-link-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></span>' +
+              '<span class="capsule-link-body"><strong>Quiero contar mi historia en Lo que llevas puesto</strong>' +
+              '<span>Si te gustaría profundizar tu historia y producir una cápsula audiovisual, conoce cómo crear la tuya.</span></span>' +
+              '<span class="capsule-link-arrow" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>' +
+            '</button>' +
+            '<div id="formMsg"></div>' +
+            '<button type="submit" class="submit-btn" id="submitBtn">Publicar mi historia</button>' +
+          '</form>' +
+        '</div>' +
+        '<div id="successPanel" class="success-panel" hidden>' +
+          '<span class="compose-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5 5L20 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+          '<h3>Gracias por compartir</h3>' +
+          '<p>Tu historia ya forma parte del archivo colectivo de Lo que llevas puesto.</p>' +
+          '<button class="submit-btn" id="seeMineBtn" type="button" style="margin-top:6px;">Ver historias</button>' +
+        '</div>' +
+      '</div>',
+      function(panel, close){ wireShareForm(panel, close); }
+    );
+  }
+
+  function wireShareForm(panel, close){
+    var localState = { photoDataUrl: null, mode: "anon" };
+    var btnAnon = panel.querySelector("#btnAnon");
+    var btnNamed = panel.querySelector("#btnNamed");
+    var nameField = panel.querySelector("#nameField");
+    function setMode(mode){
+      localState.mode = mode;
+      btnAnon.setAttribute("aria-pressed", mode === "anon");
+      btnNamed.setAttribute("aria-pressed", mode === "named");
+      nameField.hidden = (mode !== "named");
+    }
+    btnAnon.addEventListener("click", function(){ setMode("anon"); });
+    btnNamed.addEventListener("click", function(){ setMode("named"); });
+
+    // «Quiero contar mi historia…» lleva directamente a la pestaña Mi cápsula.
+    panel.querySelector("#goMiCapsula").addEventListener("click", function(){
+      close();
+      if (window.LQCP_goTo) window.LQCP_goTo("mi-capsula", true);
+    });
+
+    var photoInput = panel.querySelector("#photoInput");
+    var photoDrop = panel.querySelector("#photoDrop");
+    var photoPreviewWrap = panel.querySelector("#photoPreviewWrap");
+    var photoPreviewImg = panel.querySelector("#photoPreviewImg");
+    panel.querySelector("#photoRemove").addEventListener("click", function(e){
+      e.preventDefault();
+      localState.photoDataUrl = null;
+      photoInput.value = "";
+      photoPreviewWrap.hidden = true;
+      photoDrop.hidden = false;
+    });
+    photoInput.addEventListener("change", function(){
+      var file = photoInput.files && photoInput.files[0];
+      if (!file) return;
+      compressImage(file).then(function(dataUrl){
+        localState.photoDataUrl = dataUrl;
+        photoPreviewImg.src = dataUrl;
+        photoPreviewWrap.hidden = false;
+        photoDrop.hidden = true;
+      }).catch(function(){ showMsg(panel, "No se pudo procesar esa imagen. Intenta con otra foto.", "error"); });
+    });
+
+    async function onStorySubmit(e){
+      e.preventDefault();
+      clearMsg(panel);
+      var text = panel.querySelector("#storyText").value.trim();
+      if (text.length < 15){ showMsg(panel, "Cuéntanos un poco más: mínimo 15 caracteres.", "error"); return; }
+      var name = panel.querySelector("#nameInput").value.trim();
+      if (localState.mode === "named" && !name){ showMsg(panel, "Escribe el nombre con el que quieres aparecer, o elige compartir de forma anónima.", "error"); return; }
+      if (!state.db){ showMsg(panel, "No fue posible conectar con el archivo de historias. Intenta de nuevo en un momento.", "error"); return; }
+
+      var submitBtn = panel.querySelector("#submitBtn");
+      submitBtn.disabled = true; submitBtn.textContent = "Publicando…";
+
+      var payload = {
+        text: text, anonymous: localState.mode === "anon", name: localState.mode === "named" ? name : null,
+        photo: localState.photoDataUrl || null,
+        reactionCount: 0, commentCount: 0, createdAt: new Date().toISOString()
+      };
+      try {
+        var storyRef = await state.db.collection("stories").add(payload);
+        panel.querySelector("#shareFormWrap").hidden = true;
+        panel.querySelector("#successPanel").hidden = false;
+      } catch(err){
+        showMsg(panel, "Algo salió mal al publicar tu historia. Intenta de nuevo.", "error");
+        submitBtn.disabled = false; submitBtn.textContent = "Publicar mi historia";
+      }
+    }
+    // El toque en el botón publica directamente (funciona también en vistas previas
+    // que bloquean el envío de formularios); Enter en un campo también llega aquí.
+    panel.querySelector("#storyForm").addEventListener("submit", onStorySubmit);
+    panel.querySelector("#submitBtn").addEventListener("click", onStorySubmit);
+
+    panel.querySelector("#seeMineBtn").addEventListener("click", close);
+  }
+
+  function showMsg(panel, text, kind){
+    var el = panel.querySelector("#formMsg");
+    el.className = "form-msg " + kind; el.textContent = text;
+  }
+  function clearMsg(panel){
+    var el = panel.querySelector("#formMsg");
+    el.className = ""; el.textContent = "";
+  }
+
+  function compressImage(file){
+    return new Promise(function(resolve, reject){
+      var img = new Image();
+      var url = URL.createObjectURL(file);
+      img.onload = function(){
+        URL.revokeObjectURL(url);
+        var maxW = 640;
+        var w = img.naturalWidth, h = img.naturalHeight;
+        if (w > maxW){ h = Math.round(h * (maxW / w)); w = maxW; }
+        var canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        var quality = 0.72;
+        var dataUrl = canvas.toDataURL("image/jpeg", quality);
+        var tries = 0;
+        while (dataUrl.length > 165000 && quality > 0.3 && tries < 6){ quality -= 0.1; tries++; dataUrl = canvas.toDataURL("image/jpeg", quality); }
+        tries = 0;
+        while (dataUrl.length > 165000 && canvas.width > 220 && tries < 6){
+          canvas.width = Math.round(canvas.width * 0.8); canvas.height = Math.round(canvas.height * 0.8);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          dataUrl = canvas.toDataURL("image/jpeg", quality); tries++;
+        }
+        resolve(dataUrl);
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+
+  document.getElementById("shareBtn").addEventListener("click", openShare);
+  var _videoAddBtn = document.getElementById("videoAddBtn"); if (_videoAddBtn) _videoAddBtn.addEventListener("click", openVideoForm);
+  var _garmentAddBtn = document.getElementById("garmentAddBtn"); if (_garmentAddBtn) _garmentAddBtn.addEventListener("click", openGarmentForm);
+  document.getElementById("homeLink").addEventListener("click", function(){ window.scrollTo({top:0, behavior:"smooth"}); });
+
+})();
+</script>
+
+<!-- =====================================================================
+  CÁPSULAS AUDIOVISUALES (pestaña «Historias»)
+  Para agregar una cápsula nueva, copia un bloque { ... } y pega el link
+  de YouTube tal como lo copias del navegador o del botón «Compartir».
+  Sirven links como:
+    https://www.youtube.com/watch?v=XXXXXXXXXXX
+    https://youtu.be/XXXXXXXXXXX
+    https://www.youtube.com/shorts/XXXXXXXXXXX
+  La primera cápsula de la lista aparece grande, como destacada.
+  En YouTube, el video debe ser «Público» o «No listado» (no «Privado»)
+  y tener activada la opción «Permitir insertar».
+====================================================================== -->
+<script>
+window.LQCP_CAPSULAS = [
+  {
+    titulo: "¿Se puede amar a alguien y aun así decidir que ya no puede estar en tu vida?",
+    descripcion: "",
+    youtube: "https://youtu.be/IET_dGBFpQY"
+  },
+  {
+    titulo: "¿De verdad no sabemos lo que tenemos hasta que lo perdemos?",
+    descripcion: "",
+    youtube: "https://youtu.be/2VHwUciUtks"
+  },
+  {
+    titulo: "¿Qué cuesta más: pedir perdón o pedir permiso?",
+    descripcion: "",
+    youtube: "https://youtu.be/12eeVR1RHcI"
+  },
+
+  /* EJEMPLO — borra las barras y asteriscos de inicio y fin para activarlo:
+  {
+    titulo: "La chaqueta de mi papá",
+    descripcion: "Una prenda que viajó de un clóset a otro y que todavía guarda su olor.",
+    youtube: "https://www.youtube.com/watch?v=XXXXXXXXXXX"
+  },
+  */
+];
+</script>
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- pestañas ---------- */
+  var TABS = ["archivo", "historias", "mi-capsula"];
+  var fab = document.getElementById("shareBtn");
+
+  function showTab(name, scroll){
+    if (TABS.indexOf(name) === -1) name = "archivo";
+    document.querySelectorAll("[data-panel]").forEach(function(p){
+      p.hidden = p.getAttribute("data-panel") !== name;
+    });
+    document.querySelectorAll(".tab-btn").forEach(function(b){
+      b.setAttribute("aria-selected", b.getAttribute("data-tab") === name ? "true" : "false");
+    });
+    // El botón para publicar historias escritas sigue disponible en el Archivo.
+    if (fab) fab.hidden = name !== "archivo";
+    if (name !== "historias") stopAllCapsules();
+    if (scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function fromHash(){
+    var h = "";
+    try { h = (location.hash || "").replace("#", ""); } catch(e){}
+    return TABS.indexOf(h) > -1 ? h : "archivo";
+  }
+
+  // Guarda la pestaña en la dirección (#historias, #mi-capsula) sin
+  // romper nada si el navegador o la vista previa no lo permiten.
+  function setUrl(name){
+    try {
+      if (name === "archivo") history.replaceState(null, "", location.pathname + location.search);
+      else history.replaceState(null, "", "#" + name);
+    } catch(e){ /* vista previa o navegador que no lo permite: se ignora */ }
+  }
+  function goTo(name, scroll){
+    showTab(name, scroll);   // primero se cambia la pestaña, siempre
+    setUrl(name);
+  }
+  window.LQCP_goTo = goTo;
+
+  // Delegación: un solo escuchador para todos los botones de navegación.
+  document.addEventListener("click", function(e){
+    var t = e.target.closest ? e.target.closest("[data-tab], [data-goto]") : null;
+    if (!t) return;
+    e.preventDefault();
+    goTo(t.getAttribute("data-tab") || t.getAttribute("data-goto"), true);
+  });
+  window.addEventListener("hashchange", function(){ showTab(fromHash(), true); });
+
+  // Al tocar el nombre de la página, volver al Archivo.
+  var home = document.getElementById("homeLink");
+  if (home) home.addEventListener("click", function(){ goTo("archivo", false); });
+
+  // «Compartir por escrito» desde Mi cápsula abre el formulario existente.
+  var writeBtn = document.getElementById("mcWriteBtn");
+  if (writeBtn) writeBtn.addEventListener("click", function(){
+    goTo("archivo", false);
+    if (fab) fab.click();
+  });
+
+  /* ---------- Correo y WhatsApp: abrir las apps en el celular ---------- */
+  var CONTACT = {
+    email: "viuibarra@gmail.com",
+    phone: "573044816991",
+    subject: "Quiero mi cápsula – Lo que llevas puesto",
+    body: "Hola,\n\nMe gustaría crear mi cápsula audiovisual para Lo que llevas puesto.\n\nLa prenda o accesorio: \nSu historia, en pocas palabras: \nPrefiero (protagonizarla / mantener mi identidad en privado): \n\nGracias.",
+    waText: "Hola, me gustaría crear mi cápsula audiovisual para Lo que llevas puesto."
+  };
+  var UA = navigator.userAgent || "";
+  var IS_IOS = /iPhone|iPad|iPod/i.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  var IS_ANDROID = /Android/i.test(UA);
+  var enc = encodeURIComponent;
+
+  // Intenta abrir una app; si sigue la página a la vista, abre la versión web.
+  function openApp(appUrl, webUrl){
+    var left = false;
+    function onHide(){ if (document.visibilityState === "hidden") left = true; }
+    document.addEventListener("visibilitychange", onHide);
+    window.addEventListener("pagehide", function(){ left = true; }, { once: true });
+    setTimeout(function(){
+      document.removeEventListener("visibilitychange", onHide);
+      if (!left && document.visibilityState === "visible") window.location.href = webUrl;
+    }, 1600);
+    window.location.href = appUrl;
+  }
+
+  function gmailWeb(){
+    return "https://mail.google.com/mail/?view=cm&fs=1&to=" + CONTACT.email + "&su=" + enc(CONTACT.subject) + "&body=" + enc(CONTACT.body);
+  }
+
+  document.querySelectorAll(".js-gmail").forEach(function(a){
+    a.addEventListener("click", function(e){
+      if (IN_PREVIEW) return;                       // en vistas previas: enlace normal
+      if (IS_IOS){
+        e.preventDefault();
+        openApp("googlegmail:///co?to=" + CONTACT.email + "&subject=" + enc(CONTACT.subject) + "&body=" + enc(CONTACT.body), gmailWeb());
+      } else if (IS_ANDROID){
+        e.preventDefault();
+        // Abre la app de Gmail; si no está, Chrome abre Gmail web.
+        window.location.href = "intent:" + CONTACT.email + "?subject=" + enc(CONTACT.subject) + "&body=" + enc(CONTACT.body) +
+          "#Intent;scheme=mailto;package=com.google.android.gm;S.browser_fallback_url=" + enc(gmailWeb()) + ";end";
+      }
+      // En computador: Gmail web en una pestaña nueva (comportamiento normal del enlace).
+    });
+  });
+
+  document.querySelectorAll(".js-wa").forEach(function(a){
+    a.addEventListener("click", function(e){
+      if (IN_PREVIEW) return;
+      if (IS_IOS || IS_ANDROID){
+        e.preventDefault();
+        openApp("whatsapp://send?phone=" + CONTACT.phone + "&text=" + enc(CONTACT.waText),
+                "https://wa.me/" + CONTACT.phone + "?text=" + enc(CONTACT.waText));
+      }
+      // En computador: WhatsApp Web / app de escritorio (comportamiento normal del enlace).
+    });
+  });
+
+  /* ---------- cápsulas de YouTube ---------- */
+  function youtubeId(input){
+    if (!input) return null;
+    input = String(input).trim();
+    if (/^[\w-]{11}$/.test(input)) return input;
+    var m = input.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/|v\/))([\w-]{11})/);
+    return m ? m[1] : null;
+  }
+
+  // ¿La página está dentro de una vista previa (por ejemplo, la de una app)?
+  // Ahí YouTube no puede reproducirse incrustado, así que el video se abre en YouTube.
+  var IN_PREVIEW = false;
+  try { IN_PREVIEW = (window.origin === "null") || (location.protocol === "about:"); } catch(e){ IN_PREVIEW = true; }
+
+  function stopAllCapsules(){
+    document.querySelectorAll(".capsule-frame iframe").forEach(function(f){
+      var frame = f.parentNode;
+      if (frame && frame._restore) frame._restore();
+    });
+  }
+
+  function renderCapsules(){
+    var grid = document.getElementById("capsGrid");
+    if (!grid) return;
+    var list = (window.LQCP_CAPSULAS || []).filter(function(c){ return c && youtubeId(c.youtube); });
+    grid.innerHTML = "";
+    if (!list.length){
+      grid.style.display = "block";
+      grid.innerHTML =
+        '<div class="caps-empty">' +
+          '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>' +
+          '<p>Muy pronto encontrarás aquí las primeras cápsulas audiovisuales.</p>' +
+        '</div>';
+      return;
+    }
+    grid.style.display = "";
+    list.forEach(function(c, i){
+      var id = youtubeId(c.youtube);
+      var item = document.createElement("article");
+      item.className = "capsule";
+      item.style.setProperty("--i", i);
+      item.innerHTML =
+        '<div class="capsule-frame"></div>' +
+        '<div class="capsule-info"><h2 class="capsule-title"></h2>' + (c.descripcion ? '<p class="capsule-text"></p>' : '') +
+        '<a class="capsule-yt" href="https://www.youtube.com/watch?v=' + id + '" target="_blank" rel="noopener">Ver en YouTube ' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a></div>';
+      item.querySelector(".capsule-title").textContent = c.titulo || "";
+      if (c.descripcion) item.querySelector(".capsule-text").textContent = c.descripcion;
+
+      var frame = item.querySelector(".capsule-frame");
+      function poster(){
+        frame.innerHTML =
+          (IN_PREVIEW
+            ? '<a class="capsule-poster" href="https://www.youtube.com/watch?v=' + id + '" target="_blank" rel="noopener" aria-label="Ver en YouTube">'
+            : '<button type="button" class="capsule-poster" aria-label="Reproducir: ' + (c.titulo ? String(c.titulo).replace(/"/g, "&quot;") : "cápsula") + '">') +
+            '<img loading="lazy" alt="" src="https://i.ytimg.com/vi/' + id + '/hqdefault.jpg">' +
+            '<span class="capsule-play" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>' +
+          (IN_PREVIEW ? '</a>' : '</button>');
+        var img = frame.querySelector("img");
+        img.onerror = function(){ img.style.visibility = "hidden"; };
+        // Si existe la miniatura en alta resolución, usarla.
+        var hi = new Image();
+        hi.onload = function(){ if (hi.naturalWidth > 120) img.src = hi.src; };
+        hi.src = "https://i.ytimg.com/vi/" + id + "/maxresdefault.jpg";
+        if (!IN_PREVIEW) frame.querySelector(".capsule-poster").addEventListener("click", play);
+      }
+      function play(){
+        stopAllCapsules();
+        frame.innerHTML =
+          '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&modestbranding=1&playsinline=1" ' +
+          'title="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ' +
+          'allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+        frame.querySelector("iframe").title = c.titulo || "Cápsula audiovisual";
+      }
+      frame._restore = poster;
+      poster();
+      grid.appendChild(item);
+    });
+  }
+
+  renderCapsules();
+  showTab(fromHash(), false);
+})();
+</script>
+
+</body>
+</html>

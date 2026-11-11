@@ -1,0 +1,78 @@
+rules_version = '2';
+
+// Reglas de seguridad para «Lo que llevas puesto».
+// Cópialas en Firebase → Firestore Database → pestaña «Reglas» → Publicar.
+//
+// Qué permiten:
+//  - Cualquiera puede LEER las historias y los comentarios.
+//  - Cualquiera puede PUBLICAR una historia (con nombre o anónima) y COMENTAR.
+//  - Solo se pueden cambiar los contadores de «Me identifico» y de comentarios.
+//  - Nadie puede BORRAR ni EDITAR historias o comentarios desde la página.
+//    (Tú sí puedes borrarlos desde la consola de Firebase.)
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function onlyChanged(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+    function validCount(n) {
+      return n is int && n >= 0 && n < 1000000;
+    }
+    function optionalPhoto(p) {
+      return p == null || (p is string && p.size() < 400000);
+    }
+
+    // ---------- Historias del archivo colectivo ----------
+    match /stories/{storyId} {
+      allow read: if true;
+
+      allow create: if request.resource.data.keys().hasOnly(
+                         ['text', 'anonymous', 'name', 'photo', 'reactionCount', 'commentCount', 'createdAt'])
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() >= 15
+                    && request.resource.data.text.size() <= 1200
+                    && request.resource.data.anonymous is bool
+                    && (request.resource.data.name == null
+                        || (request.resource.data.name is string && request.resource.data.name.size() <= 60))
+                    && optionalPhoto(request.resource.data.photo)
+                    && request.resource.data.reactionCount == 0
+                    && request.resource.data.commentCount == 0
+                    && request.resource.data.createdAt is string;
+
+      allow update: if onlyChanged(['reactionCount', 'commentCount'])
+                    && validCount(request.resource.data.reactionCount)
+                    && validCount(request.resource.data.commentCount);
+
+      allow delete: if false;
+
+      // ---------- Comentarios de cada historia ----------
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if request.resource.data.keys().hasOnly(['text', 'name', 'anonymous', 'createdAt'])
+                      && request.resource.data.text is string
+                      && request.resource.data.text.size() > 0
+                      && request.resource.data.text.size() <= 400
+                      && (request.resource.data.name == null
+                          || (request.resource.data.name is string && request.resource.data.name.size() <= 40))
+                      && request.resource.data.createdAt is string;
+        allow update, delete: if false;
+      }
+    }
+
+    // ---------- Secciones antiguas (solo lectura) ----------
+    match /garments/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /videos/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Todo lo demás queda cerrado.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
